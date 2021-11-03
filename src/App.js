@@ -8,6 +8,10 @@ import {
 } from "react-router-dom";
 import Login from "./components/user/Login";
 import Home from "./components/Home";
+import jwt_decode from "jwt-decode";
+
+const USER_ROLE_ID = 1;
+const ADMIN_ROLE_ID = 2;
 
 function App() {
     const guestLinks = (
@@ -40,6 +44,28 @@ function App() {
         </ul>
     );
 
+    const adminLinks = (
+        <ul className="navbar-nav ml-auto" >
+            <li className="nav-item">
+                <Link to={'/user/10'} className={'nav-link'}>
+                    Coin Requests
+                </Link>
+            </li>
+
+            <li className="nav-item">
+                <Link to={'/user/10'} className={'nav-link'}>
+                    Add coin
+                </Link>
+            </li>
+
+            <li className="nav-item">
+                <button className={'btn btn-link'} onClick={logout}>
+                    Logout
+                </button>
+            </li>
+        </ul>
+    );
+
     const [header, setHeader] = useState(!localStorage.getItem('token') ? guestLinks : userLinks);
 
     function logout() {
@@ -48,7 +74,20 @@ function App() {
     }
 
     function updateHeader() {
-        setHeader(userLinks);
+        const token = JSON.parse(localStorage.getItem('token'))?.token;
+        if (!token) {
+            return setHeader(guestLinks);
+        }
+
+        const decodedToken = jwt_decode(token);
+        switch (decodedToken.role_id) {
+            case USER_ROLE_ID:
+                setHeader(userLinks);
+                break;
+            case ADMIN_ROLE_ID:
+                setHeader(adminLinks);
+                break;
+        }
     }
 
     function Users() {

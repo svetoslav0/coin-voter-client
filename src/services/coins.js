@@ -11,11 +11,9 @@ export const getApprovedCoins = async () => {
     if (token) {
         url += `&token=${token}`;
     }
-    console.log(url);
 
     const response = await fetch(url);
     const data = await handleResponse(response);
-    console.log(data);
     return data.coins;
 };
 
