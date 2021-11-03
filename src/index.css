@@ -1,13 +1,56 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+#login .container #login-row #login-column #login-box {
+    margin-top: 100px;
+    max-width: 600px;
+    min-height: 320px;
+    border: 1px solid #9C9C9C;
+    background-color: #EAEAEA;
+}
+
+#login .container #login-row #login-column #login-box #login-form {
+    padding: 20px;
+}
+
+.upvote-btn {
+    outline: none;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #dcdcdc;
+    transition: background-color 0.3s;
+    width: 68px;
+}
+
+.upvote-btn:hover {
+    background-color: #9C9C9C;
+}
+
+.upvote-btn:active {
+    background-color: #7f7f7f;
+}
+
+.upvoted {
+    background-color: rgb(208, 251, 225);
+    color: rgb(51, 191, 124);
+}
+
+.upvoted:hover {
+    background-color: rgb(111, 210, 151);
+}
+
+.upvoted:active {
+    background-color: rgb(82, 168, 121);
 }
