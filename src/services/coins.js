@@ -1,7 +1,11 @@
 import { handleResponse } from './auth';
 
 export const getApprovedCoins = async () => {
-    const token = JSON.parse(localStorage.getItem('token')).token;
+    const tokenObject = JSON.parse(localStorage.getItem('token'));
+    let token = null;
+    if (tokenObject) {
+        token = tokenObject.token;
+    }
 
     let url = 'http://localhost:8090/coins/approved?order=votes';
     if (token) {

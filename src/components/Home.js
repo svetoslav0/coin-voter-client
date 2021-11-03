@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 
 import { getApprovedCoins, vote } from "../services/coins";
+import { useHistory } from "react-router-dom";
 
 function Home() {
     const [coins, setCoins] = useState([]);
+    const history = useHistory();
 
     const getCoins = async () => {
         setCoins(await getApprovedCoins());
@@ -14,6 +16,11 @@ function Home() {
     }, []);
 
     const handleVote = async id => {
+        const token = JSON.parse(localStorage.getItem('token'));
+        if (!token) {
+            return history.push('/login');
+        }
+
         await vote(id);
         await getCoins();
     }

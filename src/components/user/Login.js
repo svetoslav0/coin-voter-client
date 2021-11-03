@@ -9,8 +9,6 @@ function Login(props) {
     const [showError, setShowError] = useState(false);
     const history = useHistory();
 
-
-
     useEffect(() => {
         if (localStorage.getItem('token')) {
             history.push('/');
