@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { getApprovedCoins } from "../services/coins";
+import { getApprovedCoins, vote } from "../services/coins";
 
 function Home() {
     const [coins, setCoins] = useState([]);
@@ -12,6 +12,11 @@ function Home() {
     useEffect(() => {
         getCoins();
     }, []);
+
+    const handleVote = async id => {
+        await vote(id);
+        await getCoins();
+    }
 
     return (
         <div style={{ marginTop: 50 }}>
@@ -26,7 +31,7 @@ function Home() {
                                 <td>{c.symbol}</td>
                                 <td>{c.launch_date}</td>
                                 <td>
-                                    <button className={c.has_upvoted ? "upvote-btn upvoted" : "upvote-btn"}>
+                                    <button onClick={() => handleVote(c.id)} className={c.has_upvoted ? "upvote-btn upvoted" : "upvote-btn"}>
                                         <i className="fas fa-arrow-up"></i> <br />
                                         {c.votes}
                                     </button>

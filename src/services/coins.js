@@ -14,3 +14,15 @@ export const getApprovedCoins = async () => {
     console.log(data);
     return data.coins;
 };
+
+export const vote = async id => {
+    const token = JSON.parse(localStorage.getItem('token')).token;
+
+    const url = `http://localhost:8090/coins/vote/${id}?token=${token}`;
+    const options = {
+        method: 'POST'
+    };
+
+    return fetch(url, options)
+        .then(handleResponse);
+};
