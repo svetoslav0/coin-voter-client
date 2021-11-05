@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {
     BrowserRouter as Router,
     Switch,
@@ -15,6 +15,7 @@ const USER_ROLE_ID = 1;
 const ADMIN_ROLE_ID = 2;
 
 function App() {
+    const childRef = useRef();
     const [unapprovedCoinsCount, setUnapprovedCoinsCount] = useState(0);
 
     const guestLinks = (
@@ -78,6 +79,7 @@ function App() {
     function logout() {
         localStorage.removeItem('token');
         setHeader(guestLinks);
+        childRef.current.getCoins();
     }
 
     async function updateHeader() {
@@ -136,7 +138,7 @@ function App() {
                             <Users />
                         </Route>
                         <Route path="/">
-                            <Home />
+                            <Home ref={childRef} />
                         </Route>
                     </Switch>
                 </div>

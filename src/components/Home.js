@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 
 import { getApprovedCoins, vote } from "../services/coins";
 import { useHistory } from "react-router-dom";
 
-function Home() {
+const Home = forwardRef((props, ref) => {
     const [coins, setCoins] = useState([]);
     const history = useHistory();
+
+    useImperativeHandle(ref, () => ({
+        getCoins
+    }));
 
     const getCoins = async () => {
         setCoins(await getApprovedCoins());
@@ -50,6 +54,6 @@ function Home() {
             </table>
         </div>
     );
-}
+});
 
 export default Home;
