@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     BrowserRouter as Router,
     Switch,
@@ -9,11 +9,14 @@ import {
 import Login from "./components/user/Login";
 import Home from "./components/Home";
 import jwt_decode from "jwt-decode";
+import { getUnapprovedCoinsCount } from "./services/coins";
 
 const USER_ROLE_ID = 1;
 const ADMIN_ROLE_ID = 2;
 
 function App() {
+    const [unapprovedCoinsCount, setUnapprovedCoinsCount] = useState(0);
+
     const guestLinks = (
         <ul className="navbar-nav ml-auto" id="guest">
             <li className="nav-item">
@@ -48,7 +51,7 @@ function App() {
         <ul className="navbar-nav ml-auto" >
             <li className="nav-item">
                 <Link to={'/user/10'} className={'nav-link'}>
-                    Coin Requests
+                    Coin Requests ({unapprovedCoinsCount})
                 </Link>
             </li>
 
@@ -68,12 +71,16 @@ function App() {
 
     const [header, setHeader] = useState(!localStorage.getItem('token') ? guestLinks : userLinks);
 
+    useEffect(() => {
+        updateHeader();
+    })
+
     function logout() {
         localStorage.removeItem('token');
         setHeader(guestLinks);
     }
 
-    function updateHeader() {
+    async function updateHeader() {
         const token = JSON.parse(localStorage.getItem('token'))?.token;
         if (!token) {
             return setHeader(guestLinks);
@@ -85,7 +92,11 @@ function App() {
                 setHeader(userLinks);
                 break;
             case ADMIN_ROLE_ID:
+                setUnapprovedCoinsCount(await getUnapprovedCoinsCount());
                 setHeader(adminLinks);
+                break;
+            default:
+                setHeader(guestLinks);
                 break;
         }
     }

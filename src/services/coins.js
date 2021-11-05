@@ -28,3 +28,17 @@ export const vote = async id => {
     return fetch(url, options)
         .then(handleResponse);
 };
+
+export const getUnapprovedCoinsCount = async () => {
+    const tokenObject = JSON.parse(localStorage.getItem('token'));
+    let token = null;
+    if (tokenObject) {
+        token = tokenObject.token;
+    }
+
+    let url = `http://localhost:8090/coins/unapprovedCount?token=${token}`;
+
+    const response = await fetch(url);
+    const data = await handleResponse(response);
+    return data.count;
+};
