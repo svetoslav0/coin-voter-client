@@ -10,6 +10,7 @@ import Login from "./components/user/Login";
 import Home from "./components/Home";
 import jwt_decode from "jwt-decode";
 import { getUnapprovedCoinsCount } from "./services/coins";
+import { AddCoin } from "./components/AddCoin";
 
 const USER_ROLE_ID = 1;
 const ADMIN_ROLE_ID = 2;
@@ -36,7 +37,7 @@ function App() {
     const userLinks = (
         <ul className="navbar-nav ml-auto" id="user">
             <li className="nav-item">
-                <Link to={'/user/10'} className={'nav-link'}>
+                <Link to={'/addCoin'} className={'nav-link'}>
                     Add coin
                 </Link>
             </li>
@@ -57,7 +58,7 @@ function App() {
             </li>
 
             <li className="nav-item">
-                <Link to={'/user/10'} className={'nav-link'}>
+                <Link to={'/addCoin'} className={'nav-link'}>
                     Add coin
                 </Link>
             </li>
@@ -74,7 +75,7 @@ function App() {
 
     useEffect(() => {
         updateHeader();
-    })
+    }, []);
 
     function logout() {
         localStorage.removeItem('token');
@@ -83,6 +84,7 @@ function App() {
     }
 
     async function updateHeader() {
+        console.log('updating header . . .');
         const token = JSON.parse(localStorage.getItem('token'))?.token;
         if (!token) {
             return setHeader(guestLinks);
@@ -91,15 +93,12 @@ function App() {
         const decodedToken = jwt_decode(token);
         switch (decodedToken.role_id) {
             case USER_ROLE_ID:
-                setHeader(userLinks);
-                break;
+                return setHeader(userLinks);
             case ADMIN_ROLE_ID:
                 setUnapprovedCoinsCount(await getUnapprovedCoinsCount());
-                setHeader(adminLinks);
-                break;
+                return setHeader(adminLinks);
             default:
-                setHeader(guestLinks);
-                break;
+                return setHeader(guestLinks);
         }
     }
 
@@ -133,6 +132,9 @@ function App() {
                     <Switch>
                         <Route path="/login">
                             <Login updateHeader={updateHeader} />
+                        </Route>
+                        <Route path="/addCoin">
+                            <AddCoin />
                         </Route>
                         <Route path="/users">
                             <Users />

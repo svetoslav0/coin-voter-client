@@ -7,6 +7,10 @@ const Home = forwardRef((props, ref) => {
     const [coins, setCoins] = useState([]);
     const history = useHistory();
 
+    useEffect(() => {
+        getCoins();
+    }, []);
+
     useImperativeHandle(ref, () => ({
         getCoins
     }));
@@ -14,10 +18,6 @@ const Home = forwardRef((props, ref) => {
     const getCoins = async () => {
         setCoins(await getApprovedCoins());
     };
-
-    useEffect(() => {
-        getCoins();
-    }, []);
 
     const handleVote = async id => {
         const token = JSON.parse(localStorage.getItem('token'));

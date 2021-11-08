@@ -54,3 +54,39 @@ code {
 .upvoted:active {
     background-color: rgb(82, 168, 121);
 }
+
+form#add-coin > label {
+    display: block;
+}
+
+form#add-coin > label > span.label {
+    width: 120px;
+    float: left;
+    font-weight: bold;
+    text-align: right;
+    margin-right: 15px;
+}
+
+form#add-coin input, form#add-coin textarea, .add-coin-date-picker {
+    resize: none;
+    width: 200px;
+    outline: none;
+}
+
+form#add-coin > .btn {
+    margin-left: 135px;
+}
+
+#required {
+    color: red;
+    font-weight: 900;
+}
+
+.add-coin-error {
+    margin-left: 20px;
+    border: 1px solid #f5c6cb;
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 3px 10px 3px;
+    border-radius: 3px;
+}
