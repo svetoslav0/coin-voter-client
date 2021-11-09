@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import DatePicker from "react-date-picker";
 import { addCoin } from "../services/coins";
+import { useHistory } from 'react-router-dom';
 
 export const AddCoin = props => {
+    const history = useHistory();
+
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [symbol, setSymbol] = useState('');
-    const [launchDate, setLaunchDate] = useState(formatDate(new Date()));
+    const [launchDate, setLaunchDate] = useState(new Date());
 
     const [showNameError, setShowNameError] = useState(false);
     const [showSymbolError, setShowSymbolError] = useState(false);
@@ -24,17 +27,18 @@ export const AddCoin = props => {
         const isDateValid = !showLaunchDateError;
 
         if (isNameValid && isSymbolValid && isDateValid) {
-            console.log(launchDate);
             const coin = {
                 name,
                 description,
                 symbol,
-                launch_date: launchDate
+                launch_date: formatDate(launchDate)
             };
 
             try {
-                const result = await addCoin(coin);
+                await addCoin(coin);
+                history.push('/');
             } catch (e) {
+                // todo: add some general error
                 console.log(e);
             }
         }
@@ -91,16 +95,20 @@ export const AddCoin = props => {
     const handleDateChange = value => {
         validateLaunchDateFiled(value);
 
-        const date = formatDate(value);
-        setLaunchDate(date);
+        setLaunchDate(value);
     }
 
     function formatDate(value) {
-        const date = value.getDate();
-        const month = value.getMonth() + 1;
+        const date = zeroPad(value.getDate(), 2);
+        const month = zeroPad(value.getMonth() + 1, 2);
         const year = value.getFullYear();
 
         return `${year}-${month}-${date}`;
+    }
+
+    // todo: move in some 'utils' file
+    function zeroPad(num, places) {
+        return String(num).padStart(places, '0');
     }
 
     return (

@@ -49,11 +49,21 @@ function App() {
         </ul>
     );
 
-    const adminLinks = (
+    let adminLinks = (
         <ul className="navbar-nav ml-auto" >
             <li className="nav-item">
-                <Link to={'/user/10'} className={'nav-link'}>
-                    Coin Requests ({unapprovedCoinsCount})
+                <Link to={'/user/10'} className={'nav-link position-relative'}>
+                    Coin Requests
+
+                    {unapprovedCoinsCount > 0
+                        ?
+                            <span
+                                className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {unapprovedCoinsCount}
+                                <span className="visually-hidden">unread messages</span>
+                            </span>
+                        : ''
+                    }
                 </Link>
             </li>
 
@@ -77,13 +87,20 @@ function App() {
         updateHeader();
     }, []);
 
+    // TODO: Not working properly, to be fixed
+    async function setUnapprovedCoins() {
+        const count = await getUnapprovedCoinsCount();
+        console.log(count);
+        setUnapprovedCoinsCount(count);
+    }
+
     function logout() {
         localStorage.removeItem('token');
         setHeader(guestLinks);
         childRef.current.getCoins();
     }
 
-    async function updateHeader() {
+    function updateHeader() {
         console.log('updating header . . .');
         const token = JSON.parse(localStorage.getItem('token'))?.token;
         if (!token) {
@@ -93,12 +110,17 @@ function App() {
         const decodedToken = jwt_decode(token);
         switch (decodedToken.role_id) {
             case USER_ROLE_ID:
-                return setHeader(userLinks);
+                setHeader(userLinks);
+                break;
             case ADMIN_ROLE_ID:
-                setUnapprovedCoinsCount(await getUnapprovedCoinsCount());
-                return setHeader(adminLinks);
+                setUnapprovedCoins()
+                    .then(_ => {
+                        setHeader(adminLinks);
+                    });
+                break;
             default:
-                return setHeader(guestLinks);
+                setHeader(guestLinks);
+                break;
         }
     }
 

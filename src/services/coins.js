@@ -67,14 +67,6 @@ export const addCoin = async coin => {
     }
 
     return fetch(`http://localhost:8090/coins?token=${token}`, options)
-        .then(r => r.text())
-        .then(result => {
-            const data = result && JSON.parse(result);
-            if (!result.ok) {
-                return Promise.reject(data);
-            }
-
-            return data;
-        });
+        .then(handleResponse);
 }
 
