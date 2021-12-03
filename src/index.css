@@ -67,26 +67,78 @@ form#add-coin > label > span.label {
     margin-right: 15px;
 }
 
-form#add-coin input, form#add-coin textarea, .add-coin-date-picker {
-    resize: none;
-    width: 200px;
+.date-picker {
+    width: 100%;
+    background-color: #ececec;
     outline: none;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+form#add-coin input.input-field {
+    width: 100%;
+    background-color: #ececec;
+    outline: none;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    margin: 10px 0;
+    display: block;
+}
+
+form#add-coin textarea {
+    display: block;
+    width: 100%;
+    resize: none;
+    outline: none;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #ececec;
+    margin: 10px 0;
+    height: 120px;
 }
 
 form#add-coin > .btn {
     margin-left: 135px;
 }
 
-#required {
+.required {
     color: red;
     font-weight: 900;
 }
 
 .add-coin-error {
-    margin-left: 20px;
-    border: 1px solid #f5c6cb;
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 3px 10px 3px;
-    border-radius: 3px;
+    display: block;
+    color: red;
+    margin-bottom: 30px;
+}
+
+.footer-container {
+    margin-top: 10px;
+    padding: 20px 0;
+    border-top: 1px solid #e6e6e6;
+    text-align: center;
+}
+
+.footer-container > .footer-links > a {
+    color: black;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.submit-coin {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.react-date-picker__wrapper {
+    border: none !important;
+}
+
+.presale-checkbox {
+    width: 50px;
+    height: 50px;
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { login } from '../../services/auth';
 import { useHistory } from 'react-router-dom';
 
-function Login(props) {
+export const Login = props => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('Something went wrong . . .');
@@ -79,5 +79,3 @@ function Login(props) {
         </div>
     );
 }
-
-export default Login;

@@ -1,16 +1,21 @@
 import './App.css';
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
+    Link,
+    Redirect
 } from "react-router-dom";
-import Login from "./components/user/Login";
-import Home from "./components/Home";
 import jwt_decode from "jwt-decode";
-import { getUnapprovedCoinsCount } from "./services/coins";
+
+import { Login } from "./components/user/Login";
+import { Home } from "./components/Home";
+import { Footer } from "./components/layout/Footer";
 import { AddCoin } from "./components/AddCoin";
+import { Requests } from "./components/Requests";
+
+import { getUnapprovedCoinsCount } from "./services/coins";
 
 const USER_ROLE_ID = 1;
 const ADMIN_ROLE_ID = 2;
@@ -18,6 +23,7 @@ const ADMIN_ROLE_ID = 2;
 function App() {
     const childRef = useRef();
     const [unapprovedCoinsCount, setUnapprovedCoinsCount] = useState(0);
+    const token = JSON.parse(localStorage.getItem('token'))?.token;
 
     const guestLinks = (
         <ul className="navbar-nav ml-auto" id="guest">
@@ -52,7 +58,7 @@ function App() {
     let adminLinks = (
         <ul className="navbar-nav ml-auto" >
             <li className="nav-item">
-                <Link to={'/user/10'} className={'nav-link position-relative'}>
+                <Link to={'/requests'} className={'nav-link position-relative'}>
                     Coin Requests
 
                     {unapprovedCoinsCount > 0
@@ -97,7 +103,7 @@ function App() {
     function logout() {
         localStorage.removeItem('token');
         setHeader(guestLinks);
-        childRef.current.getCoins();
+        childRef?.current?.getCoins();
     }
 
     function updateHeader() {
@@ -136,7 +142,7 @@ function App() {
                         <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
                             <ul className="navbar-nav mr-auto">
                                 <li className="nav-item active">
-                                    <Link to={'/home'} className={'nav-link'}>
+                                    <Link to={'/'} className={'nav-link'}>
                                         Home
                                     </Link>
                                 </li>
@@ -156,10 +162,20 @@ function App() {
                             <Login updateHeader={updateHeader} />
                         </Route>
                         <Route path="/addCoin">
-                            <AddCoin />
+                            {
+                                token
+                                    ? <AddCoin />
+                                    : <Redirect to="/" />
+                            }
                         </Route>
-                        <Route path="/users">
-                            <Users />
+                        <Route path="/requests">
+                            {
+                                token
+                                    ? jwt_decode(token).role_id == ADMIN_ROLE_ID
+                                        ? <Requests />
+                                        : <Redirect to="/" />
+                                    : <Redirect to="/" />
+                            }
                         </Route>
                         <Route path="/">
                             <Home ref={childRef} />
@@ -167,6 +183,7 @@ function App() {
                     </Switch>
                 </div>
             </div>
+            <Footer />
         </Router>
     );
 }

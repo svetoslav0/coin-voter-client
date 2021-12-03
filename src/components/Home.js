@@ -1,9 +1,9 @@
 import React, {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 
-import { getApprovedCoins, vote } from "../services/coins";
+import { getCoins as fetchCoins, vote } from "../services/coins";
 import { useHistory } from "react-router-dom";
 
-const Home = forwardRef((props, ref) => {
+export const Home = forwardRef((props, ref) => {
     const [coins, setCoins] = useState([]);
     const history = useHistory();
 
@@ -16,7 +16,7 @@ const Home = forwardRef((props, ref) => {
     }));
 
     const getCoins = async () => {
-        setCoins(await getApprovedCoins());
+        setCoins(await fetchCoins(true));
     };
 
     const handleVote = async id => {
@@ -55,5 +55,3 @@ const Home = forwardRef((props, ref) => {
         </div>
     );
 });
-
-export default Home;

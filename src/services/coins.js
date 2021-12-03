@@ -1,13 +1,17 @@
 import { handleResponse } from './auth';
 
-export const getApprovedCoins = async () => {
+export const getCoins = async (approved) => {
     const tokenObject = JSON.parse(localStorage.getItem('token'));
     let token = null;
     if (tokenObject) {
         token = tokenObject.token;
     }
 
-    let url = 'http://localhost:8090/coins?order=votes&approved=true';
+    let url = 'http://localhost:8090/coins?order=votes';
+    if (approved !== undefined) {
+        url += `&approved=${approved}`;
+    }
+
     if (token) {
         url += `&token=${token}`;
     }
