@@ -142,3 +142,25 @@ form#add-coin > .btn {
     width: 50px;
     height: 50px;
 }
+
+.contract-address {
+    color: #b2becb;
+}
+
+.coin-details-fragment {
+    margin-top: 50px;
+}
+
+.social-media-icon {
+    font-size: 36px;
+    color: #758393;
+    background-color: #f3f5f7;
+    margin: 8px;
+    padding: 8px;
+    border-radius: 10px;
+    transition: background-color ease 0.4s;
+}
+
+.social-media-icon:hover {
+    background-color: #E5E7EB;
+}

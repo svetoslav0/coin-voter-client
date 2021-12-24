@@ -72,5 +72,16 @@ export const addCoin = async coin => {
 
     return fetch(`http://localhost:8090/coins?token=${token}`, options)
         .then(handleResponse);
-}
+};
 
+export const getCoinById = async id => {
+    const tokenObject = JSON.parse(localStorage.getItem('token'));
+    let token = "";
+    if (tokenObject) {
+        token = tokenObject.token;
+    }
+
+    const url = `http://localhost:8090/coins/${id}?token=${token}`;
+    const response = await fetch(url);
+    return await handleResponse(response);
+};

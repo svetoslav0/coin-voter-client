@@ -14,6 +14,7 @@ import { Home } from "./components/Home";
 import { Footer } from "./components/layout/Footer";
 import { AddCoin } from "./components/AddCoin";
 import { Requests } from "./components/Requests";
+import { Details } from "./components/Details";
 
 import { getUnapprovedCoinsCount } from "./services/coins";
 
@@ -176,6 +177,9 @@ function App() {
                                         : <Redirect to="/" />
                                     : <Redirect to="/" />
                             }
+                        </Route>
+                        <Route path="/coin/:id">
+                            <Details />
                         </Route>
                         <Route path="/">
                             <Home ref={childRef} />

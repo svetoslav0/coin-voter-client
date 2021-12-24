@@ -1,7 +1,7 @@
-import React, {forwardRef, useEffect, useImperativeHandle, useState} from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
 import { getCoins as fetchCoins, vote } from "../services/coins";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 export const Home = forwardRef((props, ref) => {
     const [coins, setCoins] = useState([]);
@@ -38,7 +38,11 @@ export const Home = forwardRef((props, ref) => {
                     {coins.map(c => {
                         return (
                             <tr key={c.id}>
-                                <td>{c.name}</td>
+                                <td>
+                                    <Link to={`/coin/${c.id}`}>
+                                        {c.name}
+                                    </Link>
+                                </td>
                                 <td>{c.symbol}</td>
                                 <td>{c.launch_date}</td>
                                 <td>
