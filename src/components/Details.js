@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import ReactHtmlParser from 'react-html-parser';
 
 import { getCoinById, vote } from '../services/coins';
 
@@ -125,7 +126,7 @@ export const Details = props => {
                     </div>
 
                     <div className="coin-details-fragment" style={{color: "#798796"}}>
-                        {coin?.description}
+                        {ReactHtmlParser(coin?.description)}
                     </div>
                 </div>
             </div>

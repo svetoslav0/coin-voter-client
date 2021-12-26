@@ -131,10 +131,6 @@ function App() {
         }
     }
 
-    function Users() {
-        return <h2>Users</h2>;
-    }
-
     return (
         <Router>
             <div>

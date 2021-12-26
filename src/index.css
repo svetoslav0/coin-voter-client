@@ -101,6 +101,12 @@ form#add-coin textarea {
     height: 120px;
 }
 
+form#add-coin .description {
+    background-color: #ececec;
+    border-radius: 10px;
+    padding: 10px;
+}
+
 form#add-coin > .btn {
     margin-left: 135px;
 }

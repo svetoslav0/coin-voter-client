@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import DatePicker from "react-date-picker";
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState, convertToRaw } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 import { addCoin } from "../services/coins";
 
@@ -25,6 +29,8 @@ export const AddCoin = props => {
     const [showLaunchDateError, setShowLaunchDateError] = useState(false);
     const [showWebsiteError, setShowWebsiteError] = useState(false);
 
+    const [descriptionEditor, setDescriptionEditor] = useState(EditorState.createEmpty());
+
     const handleSubmit = async event => {
         event.preventDefault();
 
@@ -45,9 +51,19 @@ export const AddCoin = props => {
         const isDateValid = !showLaunchDateError;
 
         if (isNameValid && isSymbolValid && isDateValid) {
+            const rawContentState = convertToRaw(descriptionEditor.getCurrentContent());
+            const descriptionAsMarkup = draftToHtml(
+                rawContentState,
+                {
+                    trigger: '#',
+                    separator: ' '
+                },
+
+            );
+
             const coin = {
                 name,
-                description,
+                description: descriptionAsMarkup,
                 symbol,
                 launch_date: formatDate(launchDate),
                 logo_url: logo,
@@ -203,6 +219,10 @@ export const AddCoin = props => {
         setIsPresale(e.target.checked);
     }
 
+    const handleDescriptionEditorChange = state => {
+        setDescriptionEditor(state);
+    }
+
     function formatDate(value) {
         const date = zeroPad(value.getDate(), 2);
         const month = zeroPad(value.getMonth() + 1, 2);
@@ -274,12 +294,16 @@ export const AddCoin = props => {
                             Description
                         </label>
 
-                        <textarea
-                            name="description"
-                            value={description}
-                            onChange={handleChange}
-                            onBlur={e => validateDescription(e.target.value)}
-                        />
+                        <div className="description">
+                            <Editor
+                                editorState={descriptionEditor}
+                                toolbarClassName="toolbarClassName"
+                                wrapperClassName="wrapperClassName"
+                                editorClassName="editorClassName"
+                                placeholder="Add some description here..."
+                                onEditorStateChange={handleDescriptionEditorChange}
+                            />
+                        </div>
 
                         <label htmlFor="price">
                             Price
