@@ -1,7 +1,8 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { useHistory, Link } from "react-router-dom";
 
 import { getCoins as fetchCoins, vote } from "../services/coins";
-import { useHistory, Link } from "react-router-dom";
+import { getItemFromLocalStorage } from '../services/helpers/utils';
 
 export const Home = forwardRef((props, ref) => {
     const [coins, setCoins] = useState([]);
@@ -20,7 +21,7 @@ export const Home = forwardRef((props, ref) => {
     };
 
     const handleVote = async id => {
-        const token = localStorage.getItem('token');
+        const token = getItemFromLocalStorage('token');
         if (!token) {
             return history.push('/login');
         }
@@ -47,7 +48,7 @@ export const Home = forwardRef((props, ref) => {
                                 <td>{c.launch_date}</td>
                                 <td>
                                     <button onClick={() => handleVote(c.id)} className={c.has_upvoted ? "upvote-btn upvoted" : "upvote-btn"}>
-                                        <i className="fas fa-arrow-up"></i> <br />
+                                        <i className="fas fa-arrow-up" /> <br />
                                         {c.votes}
                                     </button>
                                 </td>

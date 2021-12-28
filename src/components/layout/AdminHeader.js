@@ -1,5 +1,5 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
-import React from "react";
 
 export const AdminHeader = props => {
     const unapprovedCoinsCount = props.unapprovedCoinsCount;

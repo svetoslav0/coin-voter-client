@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import { getCoins as fetchCoins } from "../services/coins";
+
+import { getCoins as fetchCoins } from '../services/coins';
 
 export const Requests = props => {
     const [coins, setCoins] = useState([]);

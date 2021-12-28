@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { login } from '../../services/auth';
 import { useHistory, Link } from 'react-router-dom';
+
+import { getItemFromLocalStorage } from '../../services/helpers/utils';
 
 export const Login = props => {
     const [username, setUsername] = useState('');
@@ -10,7 +12,7 @@ export const Login = props => {
     const history = useHistory();
 
     useEffect(() => {
-        if (localStorage.getItem('token')) {
+        if (getItemFromLocalStorage('token')) {
             history.push('/');
         }
     });

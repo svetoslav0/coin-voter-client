@@ -1,25 +1,26 @@
 import './App.css';
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import {
     BrowserRouter as Router,
     Switch,
     Route,
     Link,
     Redirect
-} from "react-router-dom";
-import jwt_decode from "jwt-decode";
+} from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
 
 import { GuestHeader } from './components/layout/GuestHeader';
 import { UserHeader } from './components/layout/UserHeader';
 import { AdminHeader } from './components/layout/AdminHeader';
-import { Login } from "./components/user/Login";
-import { Home } from "./components/Home";
-import { Footer } from "./components/layout/Footer";
-import { AddCoin } from "./components/AddCoin";
-import { Requests } from "./components/Requests";
-import { Details } from "./components/Details";
+import { Login } from './components/user/Login';
+import { Home } from './components/Home';
+import { Footer } from './components/layout/Footer';
+import { AddCoin } from './components/AddCoin';
+import { Requests } from './components/Requests';
+import { Details } from './components/Details';
 
-import { getUnapprovedCoinsCount } from "./services/coins";
+import { getUnapprovedCoinsCount } from './services/coins';
+import { getItemFromLocalStorage, removeItemFromLocalStorage } from './services/helpers/utils';
 
 const USER_ROLE_ID = 1;
 const ADMIN_ROLE_ID = 2;
@@ -27,7 +28,7 @@ const ADMIN_ROLE_ID = 2;
 function App() {
     const childRef = useRef();
     const [unapprovedCoinsCount, setUnapprovedCoinsCount] = useState(0);
-    const token = localStorage.getItem('token');
+    const token = getItemFromLocalStorage('token');
 
     const guestHeaderComponent = <GuestHeader />;
     const userHeaderComponent = <UserHeader logout={logout} />;
@@ -45,13 +46,13 @@ function App() {
     }
 
     function logout() {
-        localStorage.removeItem('token');
+        removeItemFromLocalStorage('token');
         setHeader(guestHeaderComponent);
         childRef?.current?.getCoins();
     }
 
     async function updateHeader() {
-        const token = localStorage.getItem('token');
+        const token = getItemFromLocalStorage('token');
         if (!token) {
             return setHeader(guestHeaderComponent);
         }

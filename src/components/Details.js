@@ -3,12 +3,13 @@ import { useHistory, useParams } from 'react-router-dom';
 import ReactHtmlParser from 'react-html-parser';
 
 import { getCoinById, vote } from '../services/coins';
+import { getItemFromLocalStorage } from '../services/helpers/utils';
 
 export const Details = props => {
     const history = useHistory();
 
     const [coin, setCoin] = useState(null);
-    const [launchDateString, setLaunchDateString] = useState("");
+    const [launchDateString, setLaunchDateString] = useState('');
     const [hasUpvoted, setHasUpvoted] = useState(false);
 
     let { id } = useParams();
@@ -33,7 +34,7 @@ export const Details = props => {
     }, []);
 
     const handleVote = async () => {
-        const token = localStorage.getItem('token');
+        const token = getItemFromLocalStorage('token');
         if (!token) {
             return history.push('/login');
         }

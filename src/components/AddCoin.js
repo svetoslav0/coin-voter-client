@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import DatePicker from "react-date-picker";
-import { Editor } from "react-draft-wysiwyg";
+import DatePicker from 'react-date-picker';
+import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-import { addCoin } from "../services/coins";
+import { addCoin } from '../services/coins';
 
 export const AddCoin = props => {
     const history = useHistory();
