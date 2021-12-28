@@ -1,39 +1,40 @@
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
+import React from "react";
 
-function AdminHeader() {
+export const AdminHeader = props => {
+    const unapprovedCoinsCount = props.unapprovedCoinsCount;
+
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div className="collapse navbar-collapse" id="navbarNav">
-                <ul className="navbar-nav">
-                    <li className="nav-item">
-                        <Link to={'/home'} className={'nav-link'} activeClassName={'active'}>
-                            Home
-                        </Link>
-                    </li>
+        <ul className="navbar-nav ml-auto" >
+            <li className="nav-item">
+                <Link to={'/requests'} className={'nav-link position-relative'}>
+                    Coin Requests
 
-                    <li className="nav-item">
-                        <Link to={'/user/10'} className={'nav-link'} activeClassName={'active'}>
-                            Coin Requests
-                        </Link>
-                    </li>
+                    {unapprovedCoinsCount > 0
+                        ?
+                        <span
+                            className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {unapprovedCoinsCount}
+                            <span className="visually-hidden">unread messages</span>
+                            </span>
+                        : ''
+                    }
+                </Link>
+            </li>
 
-                    <li className="nav-item">
-                        <Link to={'/user/10'} className={'nav-link'} activeClassName={'active'}>
-                            Add coin
-                        </Link>
-                    </li>
+            <li className="nav-item">
+                <Link to={'/addCoin'} className={'nav-link'}>
+                    Add coin
+                </Link>
+            </li>
 
-                    <li className="nav-item">
-                        <Link to={'/user/10'} className={'nav-link'} activeClassName={'active'}>
-                            Logout
-                        </Link>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+            <li className="nav-item">
+                <button className={'btn btn-link'} onClick={props.logout}>
+                    Logout
+                </button>
+            </li>
+        </ul>
     );
-
-    // activeStyle={{color: 'red'}} activeClassName={'nav-link'}
 }
 
 export default AdminHeader;

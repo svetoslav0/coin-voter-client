@@ -7,8 +7,8 @@ export const Footer = props => {
     return (
         <div className="container footer-container">
             <div className="footer-links">
-                <a href="#">Terms and Conditions</a>
-                <a href="#">Privacy Policy</a>
+                <a href="https://google.com">Terms and Conditions</a>
+                <a href="https://google.com">Privacy Policy</a>
             </div>
             <div>
                 Site Name &copy; {year}

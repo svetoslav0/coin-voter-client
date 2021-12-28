@@ -9,6 +9,9 @@ import {
 } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 
+import { GuestHeader } from './components/layout/GuestHeader';
+import { UserHeader } from './components/layout/UserHeader';
+import { AdminHeader } from './components/layout/AdminHeader';
 import { Login } from "./components/user/Login";
 import { Home } from "./components/Home";
 import { Footer } from "./components/layout/Footer";
@@ -24,78 +27,18 @@ const ADMIN_ROLE_ID = 2;
 function App() {
     const childRef = useRef();
     const [unapprovedCoinsCount, setUnapprovedCoinsCount] = useState(0);
-    const [showSearchResults, setShowSearchResults] = useState(false);
     const token = localStorage.getItem('token');
 
-    const guestLinks = (
-        <ul className="navbar-nav ml-auto" id="guest">
-            <li className="nav-item">
-                <Link to={'/login'} className={'nav-link'}>
-                    Login
-                </Link>
-            </li>
-            <li className="nav-item">
-                <Link to={'/register'} className={'nav-link'}>
-                    Register
-                </Link>
-            </li>
-        </ul>
-    );
+    const guestHeaderComponent = <GuestHeader />;
+    const userHeaderComponent = <UserHeader logout={logout} />;
+    const adminHeaderComponent = <AdminHeader logout={logout} unapprovedCoinsCount={unapprovedCoinsCount} />
 
-    const userLinks = (
-        <ul className="navbar-nav ml-auto" id="user">
-            <li className="nav-item">
-                <Link to={'/addCoin'} className={'nav-link'}>
-                    Add coin
-                </Link>
-            </li>
-            <li className="nav-item">
-                <button className={'btn btn-link'} onClick={logout}>
-                    Logout
-                </button>
-            </li>
-        </ul>
-    );
-
-    let adminLinks = (
-        <ul className="navbar-nav ml-auto" >
-            <li className="nav-item">
-                <Link to={'/requests'} className={'nav-link position-relative'}>
-                    Coin Requests
-
-                    {unapprovedCoinsCount > 0
-                        ?
-                            <span
-                                className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {unapprovedCoinsCount}
-                                <span className="visually-hidden">unread messages</span>
-                            </span>
-                        : ''
-                    }
-                </Link>
-            </li>
-
-            <li className="nav-item">
-                <Link to={'/addCoin'} className={'nav-link'}>
-                    Add coin
-                </Link>
-            </li>
-
-            <li className="nav-item">
-                <button className={'btn btn-link'} onClick={logout}>
-                    Logout
-                </button>
-            </li>
-        </ul>
-    );
-
-    const [header, setHeader] = useState(!localStorage.getItem('token') ? guestLinks : userLinks);
+    const [header, setHeader] = useState(!token ? guestHeaderComponent : userHeaderComponent);
 
     useEffect(() => {
         updateHeader();
-    }, []);
+    }, [unapprovedCoinsCount]);
 
-    // TODO: Not working properly, to be fixed
     async function setUnapprovedCoins() {
         const count = await getUnapprovedCoinsCount();
         setUnapprovedCoinsCount(count);
@@ -103,29 +46,27 @@ function App() {
 
     function logout() {
         localStorage.removeItem('token');
-        setHeader(guestLinks);
+        setHeader(guestHeaderComponent);
         childRef?.current?.getCoins();
     }
 
-    function updateHeader() {
+    async function updateHeader() {
         const token = localStorage.getItem('token');
         if (!token) {
-            return setHeader(guestLinks);
+            return setHeader(guestHeaderComponent);
         }
 
         const decodedToken = jwt_decode(token);
         switch (decodedToken.role_id) {
             case USER_ROLE_ID:
-                setHeader(userLinks);
+                setHeader(userHeaderComponent);
                 break;
             case ADMIN_ROLE_ID:
-                setUnapprovedCoins()
-                    .then(_ => {
-                        setHeader(adminLinks);
-                    });
+                await setUnapprovedCoins();
+                setHeader(adminHeaderComponent);
                 break;
             default:
-                setHeader(guestLinks);
+                setHeader(guestHeaderComponent);
                 break;
         }
     }
@@ -150,8 +91,6 @@ function App() {
                     </div>
                 </nav>
 
-                {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
                 <div className="container">
                     <Switch>
                         <Route path="/login">
@@ -167,7 +106,7 @@ function App() {
                         <Route path="/requests">
                             {
                                 token
-                                    ? jwt_decode(token).role_id == ADMIN_ROLE_ID
+                                    ? +(jwt_decode(token).role_id) === ADMIN_ROLE_ID
                                         ? <Requests />
                                         : <Redirect to="/" />
                                     : <Redirect to="/" />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { login } from '../../services/auth';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
 export const Login = props => {
     const [username, setUsername] = useState('');
@@ -69,7 +69,9 @@ export const Login = props => {
                                     <input type="submit" name="submit" className="btn btn-info btn-md" value="submit" onClick={handleLogin} />
                                 </div>
                                 <div id="register-link" className="text-right">
-                                    <a href="#" className="text-info">Register here</a>
+                                    <Link to={'/register'} className="text-info">
+                                        Register here
+                                    </Link>
                                 </div>
                             </form>
                         </div>
