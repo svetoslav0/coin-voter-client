@@ -20,7 +20,7 @@ export const Home = forwardRef((props, ref) => {
     };
 
     const handleVote = async id => {
-        const token = JSON.parse(localStorage.getItem('token'));
+        const token = localStorage.getItem('token');
         if (!token) {
             return history.push('/login');
         }

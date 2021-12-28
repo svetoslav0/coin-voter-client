@@ -24,7 +24,8 @@ const ADMIN_ROLE_ID = 2;
 function App() {
     const childRef = useRef();
     const [unapprovedCoinsCount, setUnapprovedCoinsCount] = useState(0);
-    const token = JSON.parse(localStorage.getItem('token'))?.token;
+    const [showSearchResults, setShowSearchResults] = useState(false);
+    const token = localStorage.getItem('token');
 
     const guestLinks = (
         <ul className="navbar-nav ml-auto" id="guest">
@@ -97,7 +98,6 @@ function App() {
     // TODO: Not working properly, to be fixed
     async function setUnapprovedCoins() {
         const count = await getUnapprovedCoinsCount();
-        console.log(count);
         setUnapprovedCoinsCount(count);
     }
 
@@ -108,8 +108,7 @@ function App() {
     }
 
     function updateHeader() {
-        console.log('updating header . . .');
-        const token = JSON.parse(localStorage.getItem('token'))?.token;
+        const token = localStorage.getItem('token');
         if (!token) {
             return setHeader(guestLinks);
         }

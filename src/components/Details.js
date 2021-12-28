@@ -33,7 +33,7 @@ export const Details = props => {
     }, []);
 
     const handleVote = async () => {
-        const token = JSON.parse(localStorage.getItem('token'));
+        const token = localStorage.getItem('token');
         if (!token) {
             return history.push('/login');
         }
