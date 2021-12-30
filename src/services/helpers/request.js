@@ -4,8 +4,7 @@ import {
     handleResponse,
     getItemFromLocalStorage
 } from './utils';
-
-const domain = 'http://localhost:8090';
+import { CONFIG } from '../../common/config';
 
 /**
  * @param {string} url
@@ -28,7 +27,7 @@ export const sendGetRequest = async (url, queryParams, includeToken = false) => 
         url += `?${params}`;
     }
 
-    const response = await fetch(domain + url);
+    const response = await fetch(CONFIG.LOCAL.SERVER_URL + url);
     return await handleResponse(response)
 }
 
@@ -53,6 +52,6 @@ export const sendPostRequest = async (url, bodyParams, includeToken = false) => 
         headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
         body
     }
-    const response = await fetch(domain + url, options);
+    const response = await fetch(CONFIG.LOCAL.SERVER_URL + url, options);
     return await handleResponse(response);
 };

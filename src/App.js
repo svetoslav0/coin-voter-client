@@ -1,31 +1,21 @@
 import './App.css';
 import React, { useEffect, useRef, useState } from 'react';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-    Redirect
-} from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 
+import { AppRoute } from './components/AppRoute';
+import { Nav } from './components/layout/Nav';
 import { GuestHeader } from './components/layout/GuestHeader';
 import { UserHeader } from './components/layout/UserHeader';
 import { AdminHeader } from './components/layout/AdminHeader';
-import { Login } from './components/user/Login';
-import { Home } from './components/Home';
 import { Footer } from './components/layout/Footer';
-import { AddCoin } from './components/AddCoin';
-import { Requests } from './components/Requests';
-import { Details } from './components/Details';
+
+import { CONFIG } from './common/config';
 
 import { getUnapprovedCoinsCount } from './services/coins';
 import { getItemFromLocalStorage, removeItemFromLocalStorage } from './services/helpers/utils';
 
-const USER_ROLE_ID = 1;
-const ADMIN_ROLE_ID = 2;
-
-function App() {
+const App = () => {
     const childRef = useRef();
     const [unapprovedCoinsCount, setUnapprovedCoinsCount] = useState(0);
     const token = getItemFromLocalStorage('token');
@@ -40,7 +30,7 @@ function App() {
         updateHeader();
     }, [unapprovedCoinsCount]);
 
-    async function setUnapprovedCoins() {
+    const setUnapprovedCoins = async () => {
         const count = await getUnapprovedCoinsCount();
         setUnapprovedCoinsCount(count);
     }
@@ -59,13 +49,15 @@ function App() {
 
         const decodedToken = jwt_decode(token);
         switch (decodedToken.role_id) {
-            case USER_ROLE_ID:
+            case CONFIG.COMMON.USER_ROLE_ID:
                 setHeader(userHeaderComponent);
                 break;
-            case ADMIN_ROLE_ID:
+
+            case CONFIG.COMMON.ADMIN_ROLE_ID:
                 await setUnapprovedCoins();
                 setHeader(adminHeaderComponent);
                 break;
+
             default:
                 setHeader(guestHeaderComponent);
                 break;
@@ -75,51 +67,10 @@ function App() {
     return (
         <Router>
             <div>
-                <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-                    <div className="container">
-                        <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-                            <ul className="navbar-nav mr-auto">
-                                <li className="nav-item active">
-                                    <Link to={'/'} className={'nav-link'}>
-                                        Home
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
-                            {header}
-                        </div>
-                    </div>
-                </nav>
+                <Nav header={header} />
 
                 <div className="container">
-                    <Switch>
-                        <Route path="/login">
-                            <Login updateHeader={updateHeader} />
-                        </Route>
-                        <Route path="/addCoin">
-                            {
-                                token
-                                    ? <AddCoin />
-                                    : <Redirect to="/" />
-                            }
-                        </Route>
-                        <Route path="/requests">
-                            {
-                                token
-                                    ? +(jwt_decode(token).role_id) === ADMIN_ROLE_ID
-                                        ? <Requests />
-                                        : <Redirect to="/" />
-                                    : <Redirect to="/" />
-                            }
-                        </Route>
-                        <Route path="/coin/:id">
-                            <Details />
-                        </Route>
-                        <Route path="/">
-                            <Home ref={childRef} />
-                        </Route>
-                    </Switch>
+                    <AppRoute updateHeader={updateHeader} childRef={childRef} />
                 </div>
             </div>
             <Footer />

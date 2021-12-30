@@ -6,7 +6,9 @@ import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-import { addCoin } from '../services/coins';
+import { formatDate } from '../../common/utils';
+
+import { addCoin } from '../../services/coins';
 
 export const AddCoin = props => {
     const history = useHistory();
@@ -221,19 +223,6 @@ export const AddCoin = props => {
 
     const handleDescriptionEditorChange = state => {
         setDescriptionEditor(state);
-    }
-
-    function formatDate(value) {
-        const date = zeroPad(value.getDate(), 2);
-        const month = zeroPad(value.getMonth() + 1, 2);
-        const year = value.getFullYear();
-
-        return `${year}-${month}-${date}`;
-    }
-
-    // todo: move in some 'utils' file
-    function zeroPad(num, places) {
-        return String(num).padStart(places, '0');
     }
 
     return (

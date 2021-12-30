@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import ReactHtmlParser from 'react-html-parser';
 
-import { getCoinById, vote } from '../services/coins';
-import { getItemFromLocalStorage } from '../services/helpers/utils';
+import { getCoinById, vote } from '../../services/coins';
+import { getItemFromLocalStorage } from '../../services/helpers/utils';
 
 export const Details = props => {
     const history = useHistory();
