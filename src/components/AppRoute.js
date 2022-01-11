@@ -6,7 +6,7 @@ import { CONFIG } from '../common/config';
 import { getItemFromLocalStorage } from '../services/helpers/utils';
 
 import { Login } from './user/Login';
-import { Home } from './Home';
+import { Home } from './coin/Home';
 import { AddCoin } from './coin/AddCoin';
 import { Requests } from './coin/Requests';
 import { Details } from './coin/Details';

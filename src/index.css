@@ -170,3 +170,56 @@ form#add-coin > .btn {
 .social-media-icon:hover {
     background-color: #E5E7EB;
 }
+
+.gray-text-100 {
+    color: rgb(100, 100, 100)
+}
+
+.presale-badge {
+    margin: 0 10px;
+}
+
+.coin-table {
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.coin-table:hover {
+    background-color: rgb(242,242,242);
+}
+
+.coin-table-element {
+    padding: 0;
+}
+
+.coin-table-link {
+    text-decoration: none;
+    color: black;
+    display: inline-block !important;
+    height: 100%;
+    width: 100%;
+}
+
+.coin-table-link:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.show-more-btn {
+    margin: 0 auto;
+    display: block;
+    outline: none;
+    border: none;
+    padding: 0 15px 15px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-left: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    border-right: 1px solid #dee2e6;
+    background-color: white;
+    transition: background-color ease 0.2s;
+}
+
+.show-more-btn:hover {
+    background-color: #f1f1f1;
+}

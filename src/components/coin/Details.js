@@ -49,7 +49,7 @@ export const Details = props => {
                 <div className="col-3">
                     {
                         coin?.logo_url
-                        ? <img src={coin?.logo_url} alt="Logo" />
+                        ? <img style={{width: "100%"}} src={coin?.logo_url} alt="Logo" />
                         : <img style={{width: "100%"}} src="/images/default_coin.jpg" alt="Logo" />
                     }
 

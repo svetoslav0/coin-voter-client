@@ -5,15 +5,40 @@ export const getCoinById = async id => {
     return await sendGetRequest(url, null, true);
 };
 
-export const getCoins = async approved => {
+export const searchCoins = async (approved, dateAdded = null, offset = 0, limit = null) => {
     const url = '/coins';
     const params = {
         order: 'votes',
         approved
     };
 
-    const result = await sendGetRequest(url, params, true);
-    return result.coins;
+    if (dateAdded) {
+        params.date_added = dateAdded;
+    }
+
+    if (offset) {
+        params.offset = offset;
+    }
+
+    if (limit) {
+        params.limit = limit;
+    }
+
+    return await sendGetRequest(url, params, true);
+};
+
+export const getPromotedCoins = async (offset = 0, limit = null) => {
+    const url = '/coins/promoted';
+
+    const params = {
+        offset
+    };
+
+    if (limit) {
+        params.limit = limit;
+    }
+
+    return await sendGetRequest(url, params, true);
 };
 
 export const getUnapprovedCoinsCount = async () => {
