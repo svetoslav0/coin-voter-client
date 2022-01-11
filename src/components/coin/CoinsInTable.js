@@ -2,8 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 export const CoinsInTable = props => {
-    const coinsList = props.coinsData.coins ?? props.coinsList ?? [];
+    const coinsList = props.coinsList ?? [];
     const metadata = props.coinsMetadata ?? {};
+    const updatePromotedCoins = props.updatePromotedCoins ?? false;
 
     const table = coinsList.map(c =>
         <div className="row coin-table" key={c.id.toString()}>
@@ -40,7 +41,7 @@ export const CoinsInTable = props => {
                 </Link>
             </div>
             <div className="col-2">
-                <button onClick={() => props.handleVote(c.id)} className={c.has_upvoted ? "upvote-btn upvoted" : "upvote-btn"}>
+                <button onClick={() => props.handleVote(c.id, updatePromotedCoins)} className={c.has_upvoted ? "upvote-btn upvoted" : "upvote-btn"}>
                     <i className="fas fa-arrow-up" /> <br />
                     {c.votes}
                 </button>

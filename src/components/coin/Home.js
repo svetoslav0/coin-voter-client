@@ -16,8 +16,8 @@ export const Home = forwardRef((props, ref) => {
     const [selectedTab, setSelectedTab] = useState(SELECTED_TAB.TODAY);
 
     const [promotedCoins, setPromotedCoins] = useState([]);
-    const [coinsDataFromToday, setCoinsDataFromToday] = useState([]);
-    const [coinsDataFromYesterday, setCoinsDataFromYesterday] = useState([]);
+    const [coinsFromToday, setCoinsFromToday] = useState([]);
+    const [coinsFromYesterday, setCoinsFromYesterday] = useState([]);
     const [allTimeCoins, setAllTimeCoins] = useState([]);
 
     const [promotedCoinsMetadata, setPromotedCoinsMetadata] = useState({});
@@ -34,27 +34,12 @@ export const Home = forwardRef((props, ref) => {
 
     useEffect(() => {
         fetchPromotedCoins();
-
         fetchCoinsFromToday();
     }, []);
 
     // useImperativeHandle(ref, () => ({
     //     fetchAllTimeCoins
     // }));
-
-    const fetchCoinsFromToday = async () => {
-        setSelectedTab(SELECTED_TAB.TODAY);
-        const date = formatDate(new Date());
-        setCoinsDataFromToday(await searchCoins(true, date, coinsFromTodayOffset));
-    };
-
-    const fetchCoinsFromYesterday = async () => {
-        setSelectedTab(SELECTED_TAB.YESTERDAY);
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        setCoinsDataFromYesterday(await searchCoins(true, formatDate(date), coinsFromYesterdayOffset));
-    };
-
 
     // Fetchers
     const fetchPromotedCoins = async (isAfterVote = false) => {
@@ -64,6 +49,28 @@ export const Home = forwardRef((props, ref) => {
         setPromotedCoins(response.coins);
         updatePromotedMetadata(response);
     }
+
+    const fetchCoinsFromToday = async (isAfterVote = false) => {
+        setSelectedTab(SELECTED_TAB.TODAY);
+        const { offset, limit } = buildOffsetAndLimitParamsForFetching(coinsFromTodayOffset, isAfterVote, DEFAULT_SEARCH_OFFSET);
+
+        const date = formatDate(new Date());
+        const response = await searchCoins(true, date, offset, limit);
+        setCoinsFromToday(response.coins);
+        updateCoinsFromTodayMetadata(response);
+    };
+
+    const fetchCoinsFromYesterday = async (isAfterVote = false) => {
+        setSelectedTab(SELECTED_TAB.YESTERDAY);
+        const { offset, limit } = buildOffsetAndLimitParamsForFetching(coinsFromYesterdayOffset, isAfterVote, DEFAULT_SEARCH_OFFSET);
+
+        const date = new Date();
+        date.setDate(date.getDate() - 1);
+        const formattedDate = formatDate(date);
+        const response = await searchCoins(true, formattedDate, offset, limit);
+        setCoinsFromYesterday(response.coins);
+        updateCoinsFromYesterdayMetadata(response);
+    };
 
     const fetchAllTimeCoins = async (isAfterVote = false) => {
         setSelectedTab(SELECTED_TAB.ALL_TIME);
@@ -98,12 +105,38 @@ export const Home = forwardRef((props, ref) => {
         setPromotedCoins(currentList);
     };
 
+    const handleShowMoreCoinsFromToday = async () => {
+        const newOffset = coinsFromTodayOffset + DEFAULT_SEARCH_OFFSET;
+        setCoinsFromTodayOffset(newOffset);
+
+        const date = formatDate(new Date());
+        const coinsData = await searchCoins(true, date, newOffset);
+        updateCoinsFromTodayMetadata(coinsData);
+
+        const currentList = coinsFromToday.concat(coinsData.coins);
+        setCoinsFromToday(currentList)
+    };
+
+    const handleShowMoreCoinsFromYesterday = async () => {
+        const newOffset = coinsFromYesterdayOffset + DEFAULT_SEARCH_OFFSET;
+        setCoinsFromYesterdayOffset(newOffset);
+
+        const date = new Date();
+        date.setDate(date.getDate() - 1);
+        const formattedDate = formatDate(date);
+        const coinsData = await searchCoins(true, formattedDate, newOffset);
+        updateCoinsFromYesterdayMetadata(coinsData);
+
+        const currentList = coinsFromYesterday.concat(coinsData.coins);
+        setCoinsFromYesterday(currentList);
+    };
+
     const handleShowMoreAllTimeCoins = async () => {
         const newOffset = allTimeCoinsOffset + DEFAULT_SEARCH_OFFSET;
         setAllTimeCoinsOffset(newOffset);
 
         const coinsData = await searchCoins(true, null, newOffset);
-        updateAllTimeMetadata(coinsData);
+        updateAllTimeCoinsMetadata(coinsData);
 
         const currentList = allTimeCoins.concat(coinsData.coins);
         setAllTimeCoins(currentList);
@@ -111,45 +144,47 @@ export const Home = forwardRef((props, ref) => {
 
     // Updaters
     const updatePromotedMetadata = data => {
-        setPromotedCoinsMetadata({
-            total: data.total,
-            count: data.count,
-            offset: data.offset
-        });
+        setPromotedCoinsMetadata(buildMetadata(data));
     };
 
-    const updateAllTimeMetadata = data => {
-        setAllTimeCoinsMetadata({
-            total: data.total,
-            count: data.count,
-            offset: data.offset
-        })
-    }
+    const updateCoinsFromTodayMetadata = data => {
+        setCoinsFromTodayMetadata(buildMetadata(data));
+    };
+
+    const updateCoinsFromYesterdayMetadata = data => {
+        setCoinsFromYesterdayMetadata(buildMetadata(data));
+    };
 
     const updateAllTimeCoinsMetadata = data => {
-        setAllTimeCoinsMetadata({
+        setAllTimeCoinsMetadata(buildMetadata(data));
+    };
+
+    const buildMetadata = data => {
+        return {
             total: data.total,
             count: data.count,
             offset: data.offset
-        });
+        };
     }
 
-    const handleVote = async id => {
+    const handleVote = async (id, updatePromotedCoins = false) => {
         const token = getItemFromLocalStorage('token');
         if (!token) {
             return history.push('/login');
         }
 
         await vote(id);
-        //await fetchPromotedCoinsAfterVote();
-        await fetchPromotedCoins(true);
+
+        if (updatePromotedCoins) {
+            await fetchPromotedCoins(true);
+        }
 
         switch (selectedTab) {
             case SELECTED_TAB.TODAY:
-                await fetchCoinsFromToday();
+                await fetchCoinsFromToday(true);
                 break;
             case SELECTED_TAB.YESTERDAY:
-                await fetchCoinsFromYesterday();
+                await fetchCoinsFromYesterday(true);
                 break;
             case SELECTED_TAB.ALL_TIME:
                 await fetchAllTimeCoins(true);
@@ -169,6 +204,7 @@ export const Home = forwardRef((props, ref) => {
                 coinsData={promotedCoins}
                 handleVote={handleVote}
                 getAdditionalCoinsMethod={handleShowMorePromoted}
+                updatePromotedCoins={true}
             />
 
             <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -218,12 +254,22 @@ export const Home = forwardRef((props, ref) => {
             <div className="tab-content" id="myTabContent">
                 <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 
-                    <CoinsInTable coinsData={coinsDataFromToday} handleVote={handleVote} />
+                    <CoinsInTable
+                        coinsList={coinsFromToday}
+                        coinsMetadata={coinsFromTodayMetadata}
+                        handleVote={handleVote}
+                        getAdditionalCoinsMethod={handleShowMoreCoinsFromToday}
+                    />
 
                 </div>
                 <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 
-                    <CoinsInTable coinsData={coinsDataFromYesterday} handleVote={handleVote} />
+                    <CoinsInTable
+                        coinsList={coinsFromYesterday}
+                        coinsMetadata={coinsFromYesterdayMetadata}
+                        handleVote={handleVote}
+                        getAdditionalCoinsMethod={handleShowMoreCoinsFromYesterday}
+                    />
 
                 </div>
                 <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
@@ -231,7 +277,6 @@ export const Home = forwardRef((props, ref) => {
                     <CoinsInTable
                         coinsList={allTimeCoins}
                         coinsMetadata={allTimeCoinsMetadata}
-                        coinsData={allTimeCoins}
                         handleVote={handleVote}
                         getAdditionalCoinsMethod={handleShowMoreAllTimeCoins}
                     />
