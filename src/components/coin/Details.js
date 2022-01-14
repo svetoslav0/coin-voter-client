@@ -31,7 +31,7 @@ export const Details = props => {
 
     useEffect(() => {
         getCoin();
-    }, []);
+    }, [id]);
 
     const handleVote = async () => {
         const token = getItemFromLocalStorage('token');

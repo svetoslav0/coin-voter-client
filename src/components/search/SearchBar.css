@@ -1,0 +1,38 @@
+input {
+    margin-left: 30px;
+}
+
+.search-results {
+    margin-left: 30px;
+    background-color: #fcfcfc;
+    position: absolute;
+    border: 1px solid #9C9C9C;
+    width: 265px;
+    box-shadow: 3px 3px 5px #7f7f7f;
+    z-index: 10;
+}
+
+.search-result-element {
+    padding: 8px;
+}
+
+.search-result-element:hover {
+    background-color: rgb(242, 242, 242);
+    cursor: pointer;
+}
+
+.search-result-element img {
+    margin-right: 10px;
+}
+
+.search-result-element a {
+    text-decoration: none;
+    color: black;
+}
+
+.search-close-icon {
+    color: red;
+    position: relative;
+    float: right;
+    bottom: 20px;
+}

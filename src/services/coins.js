@@ -60,3 +60,10 @@ export const addCoin = async coin => {
 
     await sendPostRequest(url, params, true);
 };
+
+export const keywordSearch = async keyword => {
+    const url = '/coins/keywordSearch';
+    const params = { keyword };
+
+    return await sendGetRequest(url, params);
+};

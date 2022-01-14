@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { SearchBar } from '../search/SearchBar';
+
 export const Nav = props => {
     return (
         <nav className="navbar navbar-expand-md navbar-dark bg-dark">
@@ -11,6 +13,9 @@ export const Nav = props => {
                             <Link to={'/'} className={'nav-link'}>
                                 Home
                             </Link>
+                        </li>
+                        <li>
+                            <SearchBar />
                         </li>
                     </ul>
                 </div>
