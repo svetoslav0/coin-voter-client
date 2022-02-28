@@ -7,3 +7,13 @@ export const login = async (username, password) => {
 
     setItemInLocalStorage('token', result.token);
 };
+
+export const googleLogin = async googleToken => {
+    const params = {
+        token: googleToken,
+    };
+
+    const result = await sendPostRequest('/users/googleLogin', params);
+
+    setItemInLocalStorage('token', result.token);
+};

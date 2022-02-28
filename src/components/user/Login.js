@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { login } from '../../services/auth';
+import { login, googleLogin } from '../../services/auth';
 import { useHistory, Link } from 'react-router-dom';
 
 import { getItemFromLocalStorage } from '../../services/helpers/utils';
+import GoogleLogin from "react-google-login";
+import TwitterLogin from "react-twitter-login";
 
 export const Login = props => {
     const [username, setUsername] = useState('');
@@ -33,15 +35,26 @@ export const Login = props => {
 
                 setShowError(true);
             });
-    }
+    };
 
     const handleUsernameChange = event => {
         setUsername(event.target.value);
-    }
+    };
 
     const handlePasswordChange = event => {
         setPassword(event.target.value);
-    }
+    };
+
+    const handleGoogleSuccessfulLogin = async (googleData) => {
+        await googleLogin(googleData.tokenId);
+
+        props.updateHeader();
+        history.push('/');
+    };
+
+    const handleGoogleFailedLogin = (result) => {
+
+    };
 
     return (
         <div id="login">
@@ -67,9 +80,23 @@ export const Login = props => {
                                     <label htmlFor="password" className="text-info">Password:</label><br />
                                     <input type="password" name="password" id="password" className="form-control" onChange={handlePasswordChange} />
                                 </div>
-                                <div className="form-group">
-                                    <input type="submit" name="submit" className="btn btn-info btn-md" value="submit" onClick={handleLogin} />
+                                <div className="form-group center-content">
+                                    <input type="submit" name="submit" className="btn btn-info btn-md" value="Login" onClick={handleLogin} />
                                 </div>
+
+                                <div className="center-content">
+                                    <GoogleLogin
+                                        onSuccess={handleGoogleSuccessfulLogin}
+                                        onFailure={handleGoogleFailedLogin}
+                                        clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                                        cookiePolicy={'single_host_origin'}
+                                        theme="light" />
+                                </div>
+
+                                <div className="center-content twitter-login-button">
+                                    <TwitterLogin authCallback="" consumerKey="" consumerSecret="" buttonTheme="dark_short" />
+                                </div>
+
                                 <div id="register-link" className="text-right">
                                     <Link to={'/register'} className="text-info">
                                         Register here
