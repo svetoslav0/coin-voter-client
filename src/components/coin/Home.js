@@ -5,9 +5,9 @@ import { SELECTED_TAB } from '../../common/SELECTED_TAB';
 
 import { CoinsInTable } from './CoinsInTable';
 
-import { searchCoins, getPromotedCoins, vote } from "../../services/coins";
+import { searchCoins, getPromotedCoins, vote } from '../../services/coins';
 import { getItemFromLocalStorage } from '../../services/helpers/utils';
-import { formatDate } from '../../common/utils';
+import { formatDateForBackend } from '../../common/generalUtils';
 
 const DEFAULT_PROMOTED_OFFSET = 5;
 const DEFAULT_SEARCH_OFFSET = 10;
@@ -54,7 +54,7 @@ export const Home = forwardRef((props, ref) => {
         setSelectedTab(SELECTED_TAB.TODAY);
         const { offset, limit } = buildOffsetAndLimitParamsForFetching(coinsFromTodayOffset, isAfterVote, DEFAULT_SEARCH_OFFSET);
 
-        const date = formatDate(new Date());
+        const date = formatDateForBackend(new Date());
         const response = await searchCoins(true, date, offset, limit);
         setCoinsFromToday(response.coins);
         updateCoinsFromTodayMetadata(response);
@@ -66,7 +66,7 @@ export const Home = forwardRef((props, ref) => {
 
         const date = new Date();
         date.setDate(date.getDate() - 1);
-        const formattedDate = formatDate(date);
+        const formattedDate = formatDateForBackend(date);
         const response = await searchCoins(true, formattedDate, offset, limit);
         setCoinsFromYesterday(response.coins);
         updateCoinsFromYesterdayMetadata(response);
@@ -109,7 +109,7 @@ export const Home = forwardRef((props, ref) => {
         const newOffset = coinsFromTodayOffset + DEFAULT_SEARCH_OFFSET;
         setCoinsFromTodayOffset(newOffset);
 
-        const date = formatDate(new Date());
+        const date = formatDateForBackend(new Date());
         const coinsData = await searchCoins(true, date, newOffset);
         updateCoinsFromTodayMetadata(coinsData);
 
@@ -123,7 +123,7 @@ export const Home = forwardRef((props, ref) => {
 
         const date = new Date();
         date.setDate(date.getDate() - 1);
-        const formattedDate = formatDate(date);
+        const formattedDate = formatDateForBackend(date);
         const coinsData = await searchCoins(true, formattedDate, newOffset);
         updateCoinsFromYesterdayMetadata(coinsData);
 

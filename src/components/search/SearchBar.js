@@ -56,7 +56,7 @@ export const SearchBar = () => {
                 onBlur={handleInputBlur}
                 onFocus={handleInputFocus}
                 onKeyUp={handleKeyPressed}
-                className="form-control mr-sm-2"
+                className="form-control mr-sm-2 search-bar"
                 type="search"
                 placeholder="Search"
                 aria-label="Search"

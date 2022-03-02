@@ -175,6 +175,10 @@ form#add-coin > .btn {
     color: rgb(100, 100, 100)
 }
 
+.margin-right-10 {
+    margin-right: 10px;
+}
+
 .presale-badge {
     margin: 0 10px;
 }
@@ -222,4 +226,12 @@ form#add-coin > .btn {
 
 .show-more-btn:hover {
     background-color: #f1f1f1;
+}
+
+.center-content {
+    text-align: center;
+}
+
+.twitter-login-button {
+    margin-top: 20px;
 }

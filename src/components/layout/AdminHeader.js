@@ -7,6 +7,12 @@ export const AdminHeader = props => {
     return (
         <ul className="navbar-nav ml-auto" >
             <li className="nav-item">
+                <Link to={'/dashboard'} className={'nav-link position-relative'}>
+                    Dashboard
+                </Link>
+            </li>
+
+            <li className="nav-item">
                 <Link to={'/requests'} className={'nav-link position-relative'}>
                     Coin Requests
 

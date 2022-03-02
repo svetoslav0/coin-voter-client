@@ -6,7 +6,7 @@ import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-import { formatDate } from '../../common/utils';
+import { formatDateForBackend } from '../../common/generalUtils';
 
 import { addCoin } from '../../services/coins';
 
@@ -67,7 +67,7 @@ export const AddCoin = props => {
                 name,
                 description: descriptionAsMarkup,
                 symbol,
-                launch_date: formatDate(launchDate),
+                launch_date: formatDateForBackend(launchDate),
                 logo_url: logo,
                 is_presale: isPresale,
                 price,

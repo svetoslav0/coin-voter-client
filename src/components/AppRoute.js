@@ -1,8 +1,7 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import jwt_decode from 'jwt-decode';
 
-import { CONFIG } from '../common/config';
+import { isCurrentUserAdmin } from '../common/authUtils';
 import { getItemFromLocalStorage } from '../services/helpers/utils';
 
 import { Login } from './user/Login';
@@ -10,6 +9,7 @@ import { Home } from './coin/Home';
 import { AddCoin } from './coin/AddCoin';
 import { Requests } from './coin/Requests';
 import { Details } from './coin/Details';
+import { Dashboard } from './dashboard/Dashboard';
 
 export const AppRoute = props => {
     const token = getItemFromLocalStorage('token');
@@ -28,8 +28,7 @@ export const AppRoute = props => {
         redirectLocationIfNotAdmin = '/') =>
     {
         if (token) {
-            const role = +(jwt_decode(token).role_id);
-            if (role === CONFIG.COMMON.ADMIN_ROLE_ID) {
+            if(isCurrentUserAdmin()) {
                 return component;
             }
 
@@ -59,6 +58,12 @@ export const AppRoute = props => {
 
             <Route path='/coin/:id'>
                 <Details />
+            </Route>
+
+            <Route path='/dashboard'>
+                {
+                    tryToAuthorizeAdminAndRedirect(<Dashboard />)
+                }
             </Route>
 
             <Route path='/'>
