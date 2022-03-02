@@ -91,7 +91,9 @@ export const Details = props => {
                 <div className="col-8 offset-1">
                     <div className="row">
                         <div className="col-8">
-                            <h3>{coin?.name}</h3>
+                            <h3>
+                                <span>{coin?.name}</span>&nbsp; <span className="details-symbol">{coin?.symbol}</span>
+                            </h3>
                             <div>
                                 Binance Chain:&nbsp;
                                 <span className="contract-address">
