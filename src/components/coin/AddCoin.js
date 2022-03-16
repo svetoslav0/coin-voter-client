@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Select from 'react-select';
 import { useHistory } from 'react-router-dom';
 import DatePicker from 'react-date-picker';
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
+
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import { formatDateForBackend } from '../../common/generalUtils';
-
 import { addCoin } from '../../services/coins';
+import { getAllCategories } from '../../services/categories';
 
 export const AddCoin = props => {
     const history = useHistory();
 
     const [name, setName] = useState('');
     const [symbol, setSymbol] = useState('');
+    const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [marketCap, setMarketCap] = useState('');
@@ -28,16 +31,33 @@ export const AddCoin = props => {
 
     const [showNameError, setShowNameError] = useState(false);
     const [showSymbolError, setShowSymbolError] = useState(false);
+    const [showCategoryError, setShowCategoryError] = useState(false);
     const [showLaunchDateError, setShowLaunchDateError] = useState(false);
     const [showWebsiteError, setShowWebsiteError] = useState(false);
 
     const [descriptionEditor, setDescriptionEditor] = useState(EditorState.createEmpty());
+    const [categoryOptions, setCategoryOptions] = useState([{value: 'test', label: 'test'}]);
+
+    const fetchAllCategories = async () => {
+        const categoriesList = await getAllCategories();
+        setCategoryOptions(categoriesList.map(c => {
+            return {
+                value: c.id,
+                label: c.name
+            };
+        }));
+    };
+
+    useEffect(() => {
+        fetchAllCategories();
+    }, []);
 
     const handleSubmit = async event => {
         event.preventDefault();
 
         validateNameFiled(name);
         validateSymbolFiled(symbol);
+        validateCategoryField(category);
         validateDescription(description);
         validatePrice(price);
         validateMarketCap(marketCap);
@@ -50,9 +70,10 @@ export const AddCoin = props => {
 
         const isNameValid = !showNameError;
         const isSymbolValid = !showSymbolError;
+        const isCategoryValid = !showCategoryError;
         const isDateValid = !showLaunchDateError;
 
-        if (isNameValid && isSymbolValid && isDateValid) {
+        if (isNameValid && isSymbolValid && isDateValid && isCategoryValid) {
             const rawContentState = convertToRaw(descriptionEditor.getCurrentContent());
             const descriptionAsMarkup = draftToHtml(
                 rawContentState,
@@ -67,6 +88,7 @@ export const AddCoin = props => {
                 name,
                 description: descriptionAsMarkup,
                 symbol,
+                category: category.value,
                 launch_date: formatDateForBackend(launchDate),
                 logo_url: logo,
                 is_presale: isPresale,
@@ -101,6 +123,14 @@ export const AddCoin = props => {
             setShowSymbolError(true);
         } else {
             setShowSymbolError(false);
+        }
+    }
+
+    const validateCategoryField = value => {
+        if (!value) {
+            setShowCategoryError(true);
+        } else {
+            setShowCategoryError(false);
         }
     }
 
@@ -211,6 +241,11 @@ export const AddCoin = props => {
         }
     }
 
+    const handleCategoryChange = category => {
+        setShowCategoryError(false);
+        setCategory(category);
+    }
+
     const handleDateChange = value => {
         validateLaunchDateFiled(value);
 
@@ -275,6 +310,27 @@ export const AddCoin = props => {
                                 ?
                                     <span className="add-coin-error">
                                         The symbol is required!
+                                    </span>
+                                : ''
+                        }
+
+                        <label htmlFor="category">
+                            Category
+                            <i className="required">*</i>
+                        </label>
+
+                        <Select
+                            name="category"
+                            onChange={handleCategoryChange}
+                            options={categoryOptions}
+                            className="react-select"
+                            classNamePrefix="react-select"
+                        />
+                        {
+                            showCategoryError
+                                ?
+                                    <span className="add-coin-error">
+                                            Selecting category is required!
                                     </span>
                                 : ''
                         }

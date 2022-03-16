@@ -5,7 +5,7 @@ export const getCoinById = async id => {
     return await sendGetRequest(url, null, true);
 };
 
-export const searchCoins = async (approved, dateAdded = null, offset = 0, limit = null) => {
+export const searchCoins = async (approved, dateAdded = null, category = null, offset = 0, limit = null) => {
     const url = '/coins';
     const params = {
         order: 'total_votes',
@@ -14,6 +14,10 @@ export const searchCoins = async (approved, dateAdded = null, offset = 0, limit 
 
     if (dateAdded) {
         params.date_added = dateAdded;
+    }
+
+    if (category) {
+        params.category = category;
     }
 
     if (offset) {

@@ -9,9 +9,15 @@ export const Nav = props => {
             <div className="container">
                 <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
                     <ul className="navbar-nav mr-auto">
-                        <li className="nav-item active">
+                        <li className="nav-item">
                             <Link to={'/'} className={'nav-link'}>
                                 Home
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            {/* TODO: This might be dynamic */}
+                            <Link to={'/categories/1'} className={'nav-link'}>
+                                Categories
                             </Link>
                         </li>
                         <li>

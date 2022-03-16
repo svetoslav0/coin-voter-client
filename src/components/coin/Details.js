@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import ReactHtmlParser from 'react-html-parser';
 
 import { getCoinById, removeVote, vote } from '../../services/coins';
@@ -92,6 +92,12 @@ export const Details = props => {
                         ? <img style={{width: "100%"}} src={coin?.logo_url} alt="Logo" />
                         : <img style={{width: "100%"}} src="/images/default_coin.jpg" alt="Logo" />
                     }
+                    <strong>Category: </strong>
+                    <span>
+                        <Link to={`/categories/${coin?.category_id}`}>
+                            {coin?.category_name}
+                        </Link>
+                    </span>
 
                 </div>
                 <div className="col-8 offset-1">

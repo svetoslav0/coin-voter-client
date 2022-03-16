@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 
 import { SELECTED_TAB } from '../../common/SELECTED_TAB';
 
@@ -55,7 +55,7 @@ export const Home = forwardRef((props, ref) => {
         const { offset, limit } = buildOffsetAndLimitParamsForFetching(coinsFromTodayOffset, isAfterVote, DEFAULT_SEARCH_OFFSET);
 
         const date = formatDateForBackend(new Date());
-        const response = await searchCoins(true, date, offset, limit);
+        const response = await searchCoins(true, date, null, offset, limit);
         setCoinsFromToday(response.coins);
         updateCoinsFromTodayMetadata(response);
     };
@@ -67,7 +67,7 @@ export const Home = forwardRef((props, ref) => {
         const date = new Date();
         date.setDate(date.getDate() - 1);
         const formattedDate = formatDateForBackend(date);
-        const response = await searchCoins(true, formattedDate, offset, limit);
+        const response = await searchCoins(true, formattedDate, null, offset, limit);
         setCoinsFromYesterday(response.coins);
         updateCoinsFromYesterdayMetadata(response);
     };
@@ -76,7 +76,7 @@ export const Home = forwardRef((props, ref) => {
         setSelectedTab(SELECTED_TAB.ALL_TIME);
         const { offset, limit } = buildOffsetAndLimitParamsForFetching(allTimeCoinsOffset, isAfterVote, DEFAULT_SEARCH_OFFSET);
 
-        const response = await searchCoins(true, null, offset, limit);
+        const response = await searchCoins(true, null, null, offset, limit);
         setAllTimeCoins(response.coins);
         updateAllTimeCoinsMetadata(response);
     };
@@ -110,7 +110,7 @@ export const Home = forwardRef((props, ref) => {
         setCoinsFromTodayOffset(newOffset);
 
         const date = formatDateForBackend(new Date());
-        const coinsData = await searchCoins(true, date, newOffset);
+        const coinsData = await searchCoins(true, date, null, newOffset);
         updateCoinsFromTodayMetadata(coinsData);
 
         const currentList = coinsFromToday.concat(coinsData.coins);
@@ -124,7 +124,7 @@ export const Home = forwardRef((props, ref) => {
         const date = new Date();
         date.setDate(date.getDate() - 1);
         const formattedDate = formatDateForBackend(date);
-        const coinsData = await searchCoins(true, formattedDate, newOffset);
+        const coinsData = await searchCoins(true, formattedDate, null, newOffset);
         updateCoinsFromYesterdayMetadata(coinsData);
 
         const currentList = coinsFromYesterday.concat(coinsData.coins);
@@ -135,7 +135,7 @@ export const Home = forwardRef((props, ref) => {
         const newOffset = allTimeCoinsOffset + DEFAULT_SEARCH_OFFSET;
         setAllTimeCoinsOffset(newOffset);
 
-        const coinsData = await searchCoins(true, null, newOffset);
+        const coinsData = await searchCoins(true, null, null, newOffset);
         updateAllTimeCoinsMetadata(coinsData);
 
         const currentList = allTimeCoins.concat(coinsData.coins);
@@ -223,12 +223,12 @@ export const Home = forwardRef((props, ref) => {
                     <button
                             onClick={fetchCoinsFromToday}
                             className="nav-link active"
-                            id="home-tab"
+                            id="today-tab"
                             data-bs-toggle="tab"
-                            data-bs-target="#home"
+                            data-bs-target="#today"
                             type="button"
                             role="tab"
-                            aria-controls="home"
+                            aria-controls="today"
                             aria-selected="true">
                         Added Today
                     </button>
@@ -237,12 +237,12 @@ export const Home = forwardRef((props, ref) => {
                     <button
                             onClick={fetchCoinsFromYesterday}
                             className="nav-link"
-                            id="profile-tab"
+                            id="yesterday-tab"
                             data-bs-toggle="tab"
-                            data-bs-target="#profile"
+                            data-bs-target="#yesterday"
                             type="button"
                             role="tab"
-                            aria-controls="profile"
+                            aria-controls="yesterday"
                             aria-selected="false">
                         Added Yesterday
                     </button>
@@ -251,19 +251,19 @@ export const Home = forwardRef((props, ref) => {
                     <button
                             onClick={fetchAllTimeCoins}
                             className="nav-link"
-                            id="contact-tab"
+                            id="all-time-tab"
                             data-bs-toggle="tab"
-                            data-bs-target="#contact"
+                            data-bs-target="#all-time"
                             type="button"
                             role="tab"
-                            aria-controls="contact"
+                            aria-controls="all-time"
                             aria-selected="false">
                         All Time
                     </button>
                 </li>
             </ul>
             <div className="tab-content" id="myTabContent">
-                <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div className="tab-pane fade show active" id="today" role="tabpanel" aria-labelledby="today-tab">
 
                     <CoinsInTable
                         coinsList={coinsFromToday}
@@ -274,7 +274,7 @@ export const Home = forwardRef((props, ref) => {
                     />
 
                 </div>
-                <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div className="tab-pane fade" id="yesterday" role="tabpanel" aria-labelledby="yesterday-tab">
 
                     <CoinsInTable
                         coinsList={coinsFromYesterday}
@@ -285,7 +285,7 @@ export const Home = forwardRef((props, ref) => {
                     />
 
                 </div>
-                <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                <div className="tab-pane fade" id="all-time" role="tabpanel" aria-labelledby="all-time-tab">
 
                     <CoinsInTable
                         coinsList={allTimeCoins}

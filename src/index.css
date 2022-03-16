@@ -239,3 +239,12 @@ form#add-coin > .btn {
 .details-symbol {
     color: #798796;
 }
+
+.react-select__control.react-select__control {
+    background-color: #ececec;
+    outline: none;
+    border: none;
+    margin: 10px 0;
+    padding: 2px;
+    border-radius: 10px;
+}

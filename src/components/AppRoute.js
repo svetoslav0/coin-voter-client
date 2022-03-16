@@ -10,6 +10,7 @@ import { AddCoin } from './coin/AddCoin';
 import { Requests } from './coin/Requests';
 import { Details } from './coin/Details';
 import { Dashboard } from './dashboard/Dashboard';
+import { Categories } from './categories/Categories';
 
 export const AppRoute = props => {
     const token = getItemFromLocalStorage('token');
@@ -58,6 +59,10 @@ export const AppRoute = props => {
 
             <Route path='/coin/:id'>
                 <Details />
+            </Route>
+
+            <Route path='/categories/:id'>
+                <Categories />
             </Route>
 
             <Route path='/dashboard'>
