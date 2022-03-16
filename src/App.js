@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useEffect, useRef, useState } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 
 import { AppRoute } from './components/AppRoute';
@@ -19,6 +19,14 @@ const App = () => {
     const childRef = useRef();
     const [unapprovedCoinsCount, setUnapprovedCoinsCount] = useState(0);
     const token = getItemFromLocalStorage('token');
+    const history = useHistory();
+
+    const logout = () => {
+        removeItemFromLocalStorage('token');
+        setHeader(guestHeaderComponent);
+        childRef?.current?.getCoins();
+        return history.push('/');
+    }
 
     const guestHeaderComponent = <GuestHeader />;
     const userHeaderComponent = <UserHeader logout={logout} />;
@@ -33,12 +41,6 @@ const App = () => {
     const setUnapprovedCoins = async () => {
         const count = await getUnapprovedCoinsCount();
         setUnapprovedCoinsCount(count);
-    }
-
-    function logout() {
-        removeItemFromLocalStorage('token');
-        setHeader(guestHeaderComponent);
-        childRef?.current?.getCoins();
     }
 
     async function updateHeader() {
@@ -65,7 +67,7 @@ const App = () => {
     }
 
     return (
-        <Router>
+        <div>
             <div>
                 <Nav header={header} />
 
@@ -74,7 +76,7 @@ const App = () => {
                 </div>
             </div>
             <Footer />
-        </Router>
+        </div>
     );
 }
 
