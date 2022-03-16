@@ -22,3 +22,13 @@ export const formatDateForDetails = value => {
 
     return `${month} ${day}, ${year}`;
 };
+
+export const canVote = coin => {
+    if (!coin?.user_last_voted) {
+        return true;
+    }
+
+    // todo: put consts in config or in consts
+    const hoursDiff = Math.abs(new Date() - new Date(coin.user_last_voted)) / 36e5;
+    return hoursDiff >= 6;
+};

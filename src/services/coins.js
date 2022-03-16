@@ -1,4 +1,4 @@
-import { sendGetRequest, sendPostRequest } from './helpers/request';
+import { sendGetRequest, sendPostRequest, sendDeleteRequest } from './helpers/request';
 
 export const getCoinById = async id => {
     const url = `/coins/${id}`;
@@ -8,7 +8,7 @@ export const getCoinById = async id => {
 export const searchCoins = async (approved, dateAdded = null, offset = 0, limit = null) => {
     const url = '/coins';
     const params = {
-        order: 'votes',
+        order: 'total_votes',
         approved
     };
 
@@ -28,10 +28,13 @@ export const searchCoins = async (approved, dateAdded = null, offset = 0, limit 
 };
 
 export const getPromotedCoins = async (offset = 0, limit = null) => {
-    const url = '/coins/promoted';
+    const url = '/coins';
 
     const params = {
-        offset
+        offset,
+        is_promoted: true,
+        approved: true,
+        order: 'date_promoted:desc'
     };
 
     if (limit) {
@@ -42,6 +45,7 @@ export const getPromotedCoins = async (offset = 0, limit = null) => {
 };
 
 export const getUnapprovedCoinsCount = async () => {
+    // TODO: This method is deprecated. Migrate to GET /coin method
     const url = `/coins/unapprovedCount`;
 
     const response = await sendGetRequest(url, null, true);
@@ -49,10 +53,16 @@ export const getUnapprovedCoinsCount = async () => {
 };
 
 export const vote = async id => {
-    const url = `/coins/vote/${id}`;
+    const url = `/votes/${id}`;
 
     return await sendPostRequest(url, null, true);
 };
+
+export const removeVote = async id => {
+    const url = `/votes/${id}`;
+
+    return await sendDeleteRequest(url, null, true);
+}
 
 export const addCoin = async coin => {
     const url = '/coins';

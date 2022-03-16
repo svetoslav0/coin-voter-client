@@ -5,7 +5,7 @@ import { SELECTED_TAB } from '../../common/SELECTED_TAB';
 
 import { CoinsInTable } from './CoinsInTable';
 
-import { searchCoins, getPromotedCoins, vote } from '../../services/coins';
+import { searchCoins, getPromotedCoins, vote, removeVote } from '../../services/coins';
 import { getItemFromLocalStorage } from '../../services/helpers/utils';
 import { formatDateForBackend } from '../../common/generalUtils';
 
@@ -33,17 +33,17 @@ export const Home = forwardRef((props, ref) => {
     const history = useHistory();
 
     useEffect(() => {
-        fetchPromotedCoins();
+        fetchPromotedCoins(false, 5);
         fetchCoinsFromToday();
     }, []);
 
-    // useImperativeHandle(ref, () => ({
-    //     fetchAllTimeCoins
-    // }));
-
     // Fetchers
-    const fetchPromotedCoins = async (isAfterVote = false) => {
-        const { offset, limit } = buildOffsetAndLimitParamsForFetching(promotedCoinsOffset, isAfterVote, DEFAULT_PROMOTED_OFFSET);
+    const fetchPromotedCoins = async (isAfterVote = false, default_limit = 0) => {
+        let { offset, limit } = buildOffsetAndLimitParamsForFetching(promotedCoinsOffset, isAfterVote, DEFAULT_PROMOTED_OFFSET);
+
+        if (default_limit) {
+            limit = default_limit;
+        }
 
         const response = await getPromotedCoins(offset, limit);
         setPromotedCoins(response.coins);
@@ -167,17 +167,28 @@ export const Home = forwardRef((props, ref) => {
         };
     }
 
-    const handleVote = async (id, updatePromotedCoins = false) => {
+    const handleVote = async (id) => {
         const token = getItemFromLocalStorage('token');
         if (!token) {
             return history.push('/login');
         }
 
         await vote(id);
+        await updateTables();
+    }
 
-        if (updatePromotedCoins) {
-            await fetchPromotedCoins(true);
+    const handleRemoveVote = async (id) => {
+        const token = getItemFromLocalStorage('token');
+        if (!token) {
+            return history.push('/login');
         }
+
+        await removeVote(id);
+        await updateTables();
+    }
+
+    const updateTables = async () => {
+        await fetchPromotedCoins(true);
 
         switch (selectedTab) {
             case SELECTED_TAB.TODAY:
@@ -201,10 +212,10 @@ export const Home = forwardRef((props, ref) => {
             <CoinsInTable
                 coinsList={promotedCoins}
                 coinsMetadata={promotedCoinsMetadata}
-                coinsData={promotedCoins}
+                coinsData={promotedCoins} // todo: remove
                 handleVote={handleVote}
+                handleRemoveVote={handleRemoveVote}
                 getAdditionalCoinsMethod={handleShowMorePromoted}
-                updatePromotedCoins={true}
             />
 
             <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -258,6 +269,7 @@ export const Home = forwardRef((props, ref) => {
                         coinsList={coinsFromToday}
                         coinsMetadata={coinsFromTodayMetadata}
                         handleVote={handleVote}
+                        handleRemoveVote={handleRemoveVote}
                         getAdditionalCoinsMethod={handleShowMoreCoinsFromToday}
                     />
 
@@ -268,6 +280,7 @@ export const Home = forwardRef((props, ref) => {
                         coinsList={coinsFromYesterday}
                         coinsMetadata={coinsFromYesterdayMetadata}
                         handleVote={handleVote}
+                        handleRemoveVote={handleRemoveVote}
                         getAdditionalCoinsMethod={handleShowMoreCoinsFromYesterday}
                     />
 
@@ -278,6 +291,7 @@ export const Home = forwardRef((props, ref) => {
                         coinsList={allTimeCoins}
                         coinsMetadata={allTimeCoinsMetadata}
                         handleVote={handleVote}
+                        handleRemoveVote={handleRemoveVote}
                         getAdditionalCoinsMethod={handleShowMoreAllTimeCoins}
                     />
 

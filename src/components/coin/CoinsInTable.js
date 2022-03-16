@@ -1,10 +1,11 @@
 import React from 'react';
+
+import { canVote } from "../../common/generalUtils";
 import { Link } from 'react-router-dom';
 
 export const CoinsInTable = props => {
     const coinsList = props.coinsList ?? [];
     const metadata = props.coinsMetadata ?? {};
-    const updatePromotedCoins = props.updatePromotedCoins ?? false;
 
     const table = coinsList.map(c =>
         <div className="row coin-table" key={c.id.toString()}>
@@ -41,10 +42,19 @@ export const CoinsInTable = props => {
                 </Link>
             </div>
             <div className="col-2">
-                <button onClick={() => props.handleVote(c.id, updatePromotedCoins)} className={c.has_upvoted ? "upvote-btn upvoted" : "upvote-btn"}>
-                    <i className="fas fa-arrow-up" /> <br />
-                    {c.votes}
-                </button>
+                {
+                    canVote(c)
+                    ?
+                        <button onClick={() => props.handleVote(c.id)} className="upvote-btn">
+                            <i className="fas fa-arrow-up" /> <br />
+                            {c.total_votes}
+                        </button>
+                    :
+                        <button onClick={() => props.handleRemoveVote(c.id)} className="upvote-btn upvoted">
+                            <i className="fas fa-arrow-up" /> <br />
+                            {c.total_votes}
+                        </button>
+                }
             </div>
         </div>
     );

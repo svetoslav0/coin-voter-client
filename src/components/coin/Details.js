@@ -2,17 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import ReactHtmlParser from 'react-html-parser';
 
-import { getCoinById, vote } from '../../services/coins';
+import { getCoinById, removeVote, vote } from '../../services/coins';
 import { getItemFromLocalStorage } from '../../services/helpers/utils';
 import { isCurrentUserAdmin } from '../../common/authUtils';
-import { formatDateForDetails } from '../../common/generalUtils';
+import { canVote, formatDateForDetails } from '../../common/generalUtils';
 
 export const Details = props => {
     const history = useHistory();
 
     const [coin, setCoin] = useState(null);
     const [launchDateString, setLaunchDateString] = useState('');
-    const [hasUpvoted, setHasUpvoted] = useState(false);
     const [showEditButton, setShowEditButton] = useState(false);
     const [showArchiveButton, setShowArchiveButton] = useState(false);
     const [showUnapprovedCoinMessage, setShowUnapprovedCoinMessage] = useState(false);
@@ -26,8 +25,6 @@ export const Details = props => {
 
         const date = formatDateForDetails(currentCoin.launch_date);
         setLaunchDateString(date);
-
-        setHasUpvoted(currentCoin.has_upvoted);
     };
 
     useEffect(() => {
@@ -66,6 +63,16 @@ export const Details = props => {
         await getCoin();
     };
 
+    const handleRemoveVote = async () => {
+        const token = getItemFromLocalStorage('token');
+        if (!token) {
+            return history.push('/login');
+        }
+
+        await removeVote(id);
+        await getCoin();
+    };
+
     return (
         <div style={{ marginTop: 50 }}>
             {
@@ -77,7 +84,6 @@ export const Details = props => {
                     :
                         null
             }
-
 
             <div className="row">
                 <div className="col-3">
@@ -126,10 +132,19 @@ export const Details = props => {
                         </div>
 
                         <div className="col-4">
-                            <button onClick={() => handleVote(coin.id)} className={hasUpvoted ? "upvote-btn upvoted" : "upvote-btn"}>
-                                <i className="fas fa-arrow-up" /> <br />
-                                {coin?.votes_count}
-                            </button>
+                            {
+                                canVote(coin)
+                                ?
+                                    <button onClick={() => handleVote(coin.id)} className="upvote-btn">
+                                        <i className="fas fa-arrow-up" /> <br />
+                                        {coin?.total_votes}
+                                    </button>
+                                    :
+                                    <button onClick={() => handleRemoveVote(coin.id)} className="upvote-btn upvoted">
+                                        <i className="fas fa-arrow-up" /> <br />
+                                        {coin?.total_votes}
+                                    </button>
+                            }
                         </div>
                     </div>
 
