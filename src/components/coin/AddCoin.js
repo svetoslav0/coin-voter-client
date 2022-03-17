@@ -5,6 +5,7 @@ import DatePicker from 'react-date-picker';
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
@@ -34,9 +35,12 @@ export const AddCoin = props => {
     const [showCategoryError, setShowCategoryError] = useState(false);
     const [showLaunchDateError, setShowLaunchDateError] = useState(false);
     const [showWebsiteError, setShowWebsiteError] = useState(false);
+    const [showRecaptchaError, setShowRecaptchaError] = useState(false);
 
     const [descriptionEditor, setDescriptionEditor] = useState(EditorState.createEmpty());
-    const [categoryOptions, setCategoryOptions] = useState([{value: 'test', label: 'test'}]);
+    const [categoryOptions, setCategoryOptions] = useState([]);
+
+    const [isRecaptchaVerified, setIsRecaptchaVerified] = useState(false);
 
     const fetchAllCategories = async () => {
         const categoriesList = await getAllCategories();
@@ -55,6 +59,7 @@ export const AddCoin = props => {
     const handleSubmit = async event => {
         event.preventDefault();
 
+        validateRecaptcha();
         validateNameFiled(name);
         validateSymbolFiled(symbol);
         validateCategoryField(category);
@@ -73,7 +78,7 @@ export const AddCoin = props => {
         const isCategoryValid = !showCategoryError;
         const isDateValid = !showLaunchDateError;
 
-        if (isNameValid && isSymbolValid && isDateValid && isCategoryValid) {
+        if (isNameValid && isSymbolValid && isDateValid && isCategoryValid && isRecaptchaVerified) {
             const rawContentState = convertToRaw(descriptionEditor.getCurrentContent());
             const descriptionAsMarkup = draftToHtml(
                 rawContentState,
@@ -107,6 +112,12 @@ export const AddCoin = props => {
                 // todo: add some general error
                 console.log(e);
             }
+        }
+    }
+
+    const validateRecaptcha = () => {
+        if (!isRecaptchaVerified) {
+            setShowRecaptchaError(true);
         }
     }
 
@@ -258,6 +269,13 @@ export const AddCoin = props => {
 
     const handleDescriptionEditorChange = state => {
         setDescriptionEditor(state);
+    }
+
+    const handleRecaptchaChange = value => {
+        if (value) {
+            setIsRecaptchaVerified(true);
+            setShowRecaptchaError(false);
+        }
     }
 
     return (
@@ -494,7 +512,21 @@ export const AddCoin = props => {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-5 offset-5 text-right">
+                    <div className="col-5 offset-7" style={{marginBottom: '20px'}}>
+                        <ReCAPTCHA
+                            sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+                            onChange={handleRecaptchaChange}
+                        />
+                        {
+                            showRecaptchaError
+                                ?
+                                    <span className="add-coin-error">
+                                        Please verify the ReCAPTCHA!
+                                    </span>
+                                : ''
+                        }
+                    </div>
+                    <div className="col-5 offset-7">
                         <input type="submit" value="Create" className="btn btn-success submit-coin" />
                     </div>
                 </div>
