@@ -335,6 +335,20 @@ export const AddCoin = props => {
                                 : ''
                         }
 
+                        <label htmlFor="contractAddress">
+                            Contract Address
+                        </label>
+                        <input
+                            id="contractAddress"
+                            className="input-field"
+                            type="text"
+                            name="contractAddress"
+                            value={contractAddress}
+                            onChange={handleChange}
+                            onBlur={e => validateContractAddress(e.target.value)}
+
+                        />
+
                         <label htmlFor="description">
                             Description
                         </label>
@@ -418,20 +432,6 @@ export const AddCoin = props => {
                     <div className="col-5">
                         <h4>Additional Information</h4>
 
-                        <label htmlFor="contractAddress">
-                            Contract Address
-                        </label>
-                        <input
-                            id="contractAddress"
-                            className="input-field"
-                            type="text"
-                            name="contractAddress"
-                            value={contractAddress}
-                            onChange={handleChange}
-                            onBlur={e => validateContractAddress(e.target.value)}
-
-                        />
-
                         <label htmlFor="website">
                             Website
                             <i className="required">*</i>
@@ -495,7 +495,7 @@ export const AddCoin = props => {
                 </div>
                 <div className="row">
                     <div className="col-5 offset-5 text-right">
-                        <input type="submit" className="btn btn-success submit-coin" />
+                        <input type="submit" value="Create" className="btn btn-success submit-coin" />
                     </div>
                 </div>
             </form>
