@@ -19,12 +19,16 @@ export const Details = () => {
     let { id } = useParams();
 
     const getCoin = async () => {
-        const currentCoin = await getCoinById(id);
-        checkForCoinApproval(currentCoin);
-        setCoin(currentCoin);
+        try {
+            const currentCoin = await getCoinById(id);
+            checkForCoinApproval(currentCoin);
+            setCoin(currentCoin);
 
-        const date = formatDateForDetails(currentCoin.launch_date);
-        setLaunchDateString(date);
+            const date = formatDateForDetails(currentCoin?.launch_date);
+            setLaunchDateString(date);
+        } catch (e) {
+            history.push('/');
+        }
     };
 
     useEffect(() => {
@@ -33,13 +37,13 @@ export const Details = () => {
 
     const checkForCoinApproval = (coin) => {
         const isAdmin = isCurrentUserAdmin();
-        const isOwner = coin.is_owner;
+        const isOwner = coin?.is_owner;
 
-        if (!isAdmin && !isOwner) {
+        if (!isAdmin && !isOwner && !coin?.is_approved) {
             history.push('/');
         }
 
-        if (!coin.is_approved) {
+        if (!coin?.is_approved) {
             setShowUnapprovedCoinMessage(true);
         }
 

@@ -79,5 +79,5 @@ export const keywordSearch = async keyword => {
     const url = '/coins/keywordSearch';
     const params = { keyword };
 
-    return await sendGetRequest(url, params);
+    return await sendGetRequest(url, params, true);
 };
