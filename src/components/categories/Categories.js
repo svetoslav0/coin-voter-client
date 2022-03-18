@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {useHistory, useParams} from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { CoinsInTable } from '../coin/CoinsInTable';
 
@@ -7,12 +7,15 @@ import { getItemFromLocalStorage } from '../../services/helpers/utils';
 import { getAllCategories } from '../../services/categories';
 import { removeVote, searchCoins, vote } from '../../services/coins';
 
+const DEFAULT_OFFSET = 10;
+
 export const Categories = () => {
 
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(0);
     const [coinsInCategory, setCoinsInCategory] = useState([]);
     const [coinsMetadata, setCoinsMetadata] = useState({});
+    const [offset, setOffset] = useState(0);
 
     const history = useHistory();
     let { id: idParam } = useParams();
@@ -25,8 +28,11 @@ export const Categories = () => {
         };
     }
 
+    const updateMetadata = data => {
+        setCoinsMetadata(buildMetadata(data));
+    }
+
     const init = async () => {
-        console.log(idParam);
         const categoriesList = await getAllCategories();
         setCategories(categoriesList);
         setSelectedCategory(idParam);
@@ -35,13 +41,14 @@ export const Categories = () => {
 
     const fetchCoinsForCategory = async (id, updateUrl = false) => {
         if (updateUrl) {
+            setOffset(0);
             history.push(`/categories/${id}`);
         }
 
         const coinsData = await searchCoins(true, null, id);
         idParam = id;
 
-        setCoinsInCategory(coinsData);
+        setCoinsInCategory(coinsData.coins);
         setCoinsMetadata(buildMetadata(coinsData));
         setSelectedCategory(id);
     }
@@ -70,8 +77,16 @@ export const Categories = () => {
         await fetchCoinsForCategory(selectedCategory);
     };
 
-    const handleShowMoreAllTimeCoins = () => {
-        throw new Error('Not implemented yet, will be after fixing GH-10 on the server');
+    const handleShowCoins = async () => {
+        const newOffset = offset + DEFAULT_OFFSET;
+        setOffset(newOffset);
+
+        const coinsData = await searchCoins(true, null, idParam, newOffset);
+
+        updateMetadata(coinsData);
+
+        const newList = coinsInCategory.concat(coinsData.coins);
+        setCoinsInCategory(newList);
     };
 
     return (
@@ -114,11 +129,11 @@ export const Categories = () => {
                                 key={c.id}>
 
                                 <CoinsInTable
-                                    coinsList={coinsInCategory.coins}
+                                    coinsList={coinsInCategory}
                                     coinsMetadata={coinsMetadata}
                                     handleVote={handleVote}
                                     handleRemoveVote={handleRemoveVote}
-                                    getAdditionalCoinsMethod={handleShowMoreAllTimeCoins}
+                                    getAdditionalCoinsMethod={handleShowCoins}
                                 />
                             </div>
                         );

@@ -5,11 +5,11 @@ export const getCoinById = async id => {
     return await sendGetRequest(url, null, true);
 };
 
-export const searchCoins = async (approved, dateAdded = null, category = null, offset = 0, limit = null) => {
+export const searchCoins = async (is_approved, dateAdded = null, category = null, offset = 0, limit = null) => {
     const url = '/coins';
     const params = {
         order: 'total_votes',
-        approved
+        is_approved
     };
 
     if (dateAdded) {
@@ -37,7 +37,7 @@ export const getPromotedCoins = async (offset = 0, limit = null) => {
     const params = {
         offset,
         is_promoted: true,
-        approved: true,
+        is_approved: true,
         order: 'date_promoted:desc'
     };
 
