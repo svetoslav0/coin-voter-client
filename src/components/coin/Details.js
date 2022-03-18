@@ -36,7 +36,7 @@ export const Details = props => {
         const isOwner = coin.is_owner;
 
         if (!isAdmin && !isOwner) {
-            return;
+            history.push('/');
         }
 
         if (!coin.is_approved) {
