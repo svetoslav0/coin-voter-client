@@ -248,3 +248,7 @@ form#add-coin > .btn {
     padding: 2px;
     border-radius: 10px;
 }
+
+.nav-spacer {
+    width: 30px;
+}

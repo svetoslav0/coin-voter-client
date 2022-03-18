@@ -1,9 +1,9 @@
 input.search-bar {
-    margin-left: 30px;
+    /*margin-left: 30px;*/
 }
 
 .search-results {
-    margin-left: 30px;
+    /*margin-left: 30px;*/
     background-color: #fcfcfc;
     position: absolute;
     border: 1px solid #9C9C9C;
@@ -35,4 +35,16 @@ input.search-bar {
     position: relative;
     float: right;
     bottom: 20px;
+}
+
+.search-bar-wrapper {
+    position: relative;
+}
+
+.fa-xmark {
+    position: absolute;
+    color: gray;
+    right: 11px;
+    top: 11px;
+    cursor: pointer;
 }

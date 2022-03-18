@@ -8,8 +8,10 @@ import './SearchBar.css';
 const ESC_KEY_CODE = 27;
 
 export const SearchBar = () => {
+    let inputRef = React.createRef();
     const history = useHistory();
     const [showResults, setShowResults] = useState(false);
+    const [showXMarkSign, setShowXMarkSign] = useState(false);
     const [keyword, setKeyword] = useState('')
     const [resultList, setResultList] = useState([]);
 
@@ -19,11 +21,13 @@ export const SearchBar = () => {
 
         if (value) {
             setShowResults(true);
+            setShowXMarkSign(true);
 
             const result = await keywordSearch(value);
             setResultList(result.coins);
         } else {
             setShowResults(false);
+            setShowXMarkSign(false);
         }
     };
 
@@ -49,19 +53,35 @@ export const SearchBar = () => {
         }
     };
 
+    const handleXMarkSignClick = async () => {
+        setKeyword('');
+        setShowXMarkSign(false);
+        inputRef?.current?.focus();
+
+        setResultList([]);
+    }
+
     return (
         <div>
-            <input
-                onChange={handleInputChange}
-                onBlur={handleInputBlur}
-                onFocus={handleInputFocus}
-                onKeyUp={handleKeyPressed}
-                className="form-control mr-sm-2 search-bar"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-                value={keyword}
-            />
+            <div className="search-bar-wrapper">
+                <input
+                    onChange={handleInputChange}
+                    onBlur={handleInputBlur}
+                    onFocus={handleInputFocus}
+                    onKeyUp={handleKeyPressed}
+                    className="form-control mr-sm-2 search-bar"
+                    type="search"
+                    placeholder="Search"
+                    aria-label="Search"
+                    value={keyword}
+                    ref={inputRef}
+                />
+                {
+                    showXMarkSign
+                    ? <i className="fa-solid fa-xmark" onClick={handleXMarkSignClick} />
+                    : ''
+                }
+            </div>
 
             {
                 showResults &&

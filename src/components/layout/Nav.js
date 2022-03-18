@@ -20,6 +20,9 @@ export const Nav = props => {
                                 Categories
                             </Link>
                         </li>
+                        <div className="nav-spacer">
+
+                        </div>
                         <li>
                             <SearchBar />
                         </li>
