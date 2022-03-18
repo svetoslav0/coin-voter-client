@@ -7,7 +7,7 @@ import { getItemFromLocalStorage } from '../../services/helpers/utils';
 import { isCurrentUserAdmin } from '../../common/authUtils';
 import { canVote, formatDateForDetails } from '../../common/generalUtils';
 
-export const Details = props => {
+export const Details = () => {
     const history = useHistory();
 
     const [coin, setCoin] = useState(null);
