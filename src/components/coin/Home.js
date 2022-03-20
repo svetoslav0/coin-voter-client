@@ -33,7 +33,7 @@ export const Home = forwardRef((props, ref) => {
     const history = useHistory();
 
     useEffect(() => {
-        fetchPromotedCoins(false, 5);
+        fetchPromotedCoins(false, 5); // TODO: limit in const somewhere
         fetchCoinsFromToday();
     }, []);
 

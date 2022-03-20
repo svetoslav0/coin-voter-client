@@ -102,7 +102,7 @@ export const Categories = () => {
                             <li className="nav-item" role="presentation" key={c.id}>
                                 <button
                                     onClick={() => fetchCoinsForCategory(c.id, true)}
-                                    className={"nav-link " + (c.id == idParam ? "active" : "")}
+                                    className={"nav-link " + (+c.id === +idParam ? "active" : "")}
                                     id={`${c.name}-tab`}
                                     data-bs-toggle="tab"
                                     data-bs-target={`#${c.name}`}
@@ -122,7 +122,7 @@ export const Categories = () => {
                     categories.map(c => {
                         return (
                             <div
-                                className={"tab-pane fade show " + (c.id == idParam ? "active" : "")}
+                                className={"tab-pane fade show " + (+c.id === +idParam ? "active" : "")}
                                 id={c.name}
                                 role="tabpanel"
                                 aria-labelledby={`${c.name}-tab`}
