@@ -5,11 +5,11 @@ export const getCoinById = async id => {
     return await sendGetRequest(url, null, true);
 };
 
-export const searchCoins = async (is_approved, dateAdded = null, category = null, offset = 0, limit = null) => {
+export const searchCoins = async (isApproved, dateAdded = null, category = null, offset = 0, limit = null, order = null) => {
     const url = '/coins';
     const params = {
         order: 'total_votes',
-        is_approved
+        is_approved: isApproved
     };
 
     if (dateAdded) {
@@ -26,6 +26,10 @@ export const searchCoins = async (is_approved, dateAdded = null, category = null
 
     if (limit) {
         params.limit = limit;
+    }
+
+    if (order) {
+        params.order = order;
     }
 
     return await sendGetRequest(url, params, true);
@@ -81,3 +85,15 @@ export const keywordSearch = async keyword => {
 
     return await sendGetRequest(url, params, true);
 };
+
+export const approveCoin = async id => {
+    const url = `/coins/approve/${id}`;
+
+    return await sendPostRequest(url, null, true);
+};
+
+export const approveAllCoins = async () => {
+    const url = `/coins/approve`;
+
+    return await sendPostRequest(url, null, true);
+}

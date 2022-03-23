@@ -38,11 +38,11 @@ export const Home = forwardRef((props, ref) => {
     }, []);
 
     // Fetchers
-    const fetchPromotedCoins = async (isAfterVote = false, default_limit = 0) => {
+    const fetchPromotedCoins = async (isAfterVote = false, defaultLimit = 0) => {
         let { offset, limit } = buildOffsetAndLimitParamsForFetching(promotedCoinsOffset, isAfterVote, DEFAULT_PROMOTED_OFFSET);
 
-        if (default_limit) {
-            limit = default_limit;
+        if (defaultLimit) {
+            limit = defaultLimit;
         }
 
         const response = await getPromotedCoins(offset, limit);

@@ -367,21 +367,6 @@ export const AddCoin = props => {
 
                         />
 
-                        <label htmlFor="description">
-                            Description
-                        </label>
-
-                        <div className="description">
-                            <Editor
-                                editorState={descriptionEditor}
-                                toolbarClassName="toolbarClassName"
-                                wrapperClassName="wrapperClassName"
-                                editorClassName="editorClassName"
-                                placeholder="Add some description here..."
-                                onEditorStateChange={handleDescriptionEditorChange}
-                            />
-                        </div>
-
                         <label htmlFor="price">
                             Price
                         </label>
@@ -407,6 +392,21 @@ export const AddCoin = props => {
                             onChange={handleChange}
                             onBlur={e => validateMarketCap(e.target.value)}
                         />
+
+                        <label htmlFor="description">
+                            Description
+                        </label>
+
+                        <div className="description">
+                            <Editor
+                                editorState={descriptionEditor}
+                                toolbarClassName="toolbarClassName"
+                                wrapperClassName="wrapperClassName"
+                                editorClassName="editorClassName"
+                                placeholder="Add some description here..."
+                                onEditorStateChange={handleDescriptionEditorChange}
+                            />
+                        </div>
 
                         <label htmlFor="date-picker">
                             Launch Date
