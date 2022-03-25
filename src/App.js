@@ -49,8 +49,16 @@ const App = () => {
             return setHeader(guestHeaderComponent);
         }
 
-        const decodedToken = jwt_decode(token);
-        switch (decodedToken.role_id) {
+
+        let decodedToken = {};
+
+        try {
+            decodedToken = jwt_decode(token);
+        } catch (e) {
+            removeItemFromLocalStorage('token');
+        }
+
+        switch (decodedToken?.role_id) {
             case CONFIG.COMMON.USER_ROLE_ID:
                 setHeader(userHeaderComponent);
                 break;

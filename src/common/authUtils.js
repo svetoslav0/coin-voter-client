@@ -1,7 +1,7 @@
 import jwt_decode from 'jwt-decode';
 
 import { CONFIG } from './config';
-import { getItemFromLocalStorage } from '../services/helpers/utils';
+import { getItemFromLocalStorage, removeItemFromLocalStorage } from '../services/helpers/utils';
 
 export const isCurrentUserAdmin = () => {
     const token = getItemFromLocalStorage('token');
@@ -9,7 +9,12 @@ export const isCurrentUserAdmin = () => {
         return false;
     }
 
-    const role = +(jwt_decode(token).role_id);
+    let role = null;
+    try {
+        role = +(jwt_decode(token).role_id);
+    } catch (e) {
+        removeItemFromLocalStorage('token');
+    }
 
-    return role === CONFIG.COMMON.ADMIN_ROLE_ID;
+    return role == CONFIG.COMMON.ADMIN_ROLE_ID;
 }
